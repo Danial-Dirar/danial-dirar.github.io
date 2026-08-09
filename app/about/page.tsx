@@ -61,7 +61,7 @@ export default function AboutPage() {
               <h2 className="mt-10 font-mono text-lg font-semibold">
                 <span className="text-primary">$ </span>ls skills/
               </h2>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {skills.map((skill) => (
                   <Badge key={skill} variant="secondary" className="font-mono text-xs">
                     {skill}
@@ -74,7 +74,7 @@ export default function AboutPage() {
               <h2 className="mt-10 font-mono text-lg font-semibold">
                 <span className="text-primary">$ </span>cat publications.bib
               </h2>
-              <div className="mt-4 space-y-4">
+              <div className="mt-5 space-y-4">
                 {publications.map((pub) => (
                   <a
                     key={pub.doi}

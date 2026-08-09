@@ -23,7 +23,7 @@ export default function ResearchPage() {
           </h1>
         </Reveal>
         <Reveal delay={0.05}>
-          <p className="mt-3 text-muted-foreground">
+          <p className="mt-5 text-muted-foreground">
             Peer-reviewed work on managed aquifer recharge and groundwater
             resilience in Bangladesh&apos;s Barind Tract — plus ongoing machine-learning
             research. Click any paper to read its abstract.

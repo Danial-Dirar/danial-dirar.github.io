@@ -32,7 +32,7 @@ export default function BlogPage() {
           </h1>
         </Reveal>
         <Reveal delay={0.05}>
-          <p className="mt-3 text-muted-foreground">
+          <p className="mt-5 text-muted-foreground">
             Notes on ML, generative AI, and local AI for business — with the
             occasional build log.
           </p>

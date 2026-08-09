@@ -20,7 +20,7 @@ export default function ProjectsPage() {
           </h1>
         </Reveal>
         <Reveal delay={0.05}>
-          <p className="mt-3 max-w-xl text-muted-foreground">
+          <p className="mt-5 max-w-xl text-muted-foreground">
             ML models, local-AI systems, and the software around them — most with
             source on GitHub.
           </p>

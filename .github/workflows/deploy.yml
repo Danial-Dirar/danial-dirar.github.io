@@ -35,10 +35,16 @@ jobs:
         run: npm ci
 
       - name: Build static export
-        # `configure-pages` sets steps.pages.outputs.base_path to "" for a user
-        # site or "/<repo>" for a project site, so the URL is always correct.
+        # This repo is named <user>.github.io, so it is a *user* site and always
+        # serves from the root — the base path is empty, permanently.
+        #
+        # It used to be taken from steps.pages.outputs.base_path. That broke the
+        # site during the rename from `portfolio`: the build still saw
+        # "/portfolio", so every asset URL in the HTML got that prefix while the
+        # files deployed to the root, and nothing loaded. A constant cannot go
+        # stale the way that lookup did.
         env:
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_BASE_PATH: ""
         run: npm run build
 
       - name: Upload artifact

@@ -7,6 +7,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import { Badge } from "@/components/ui/badge";
+import { MdxImage } from "@/components/mdx/mdx-image";
 import { formatDate, getAllPosts, getPost } from "@/lib/blog";
 import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
@@ -90,6 +91,7 @@ export default async function BlogPostPage({
         <div className="prose-blog mt-8">
           <MDXRemote
             source={post.content}
+            components={{ img: MdxImage }}
             options={{
               mdxOptions: {
                 remarkPlugins: [remarkGfm],

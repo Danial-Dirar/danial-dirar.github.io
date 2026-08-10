@@ -1,27 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { commitFiles, type BlogFileEntry } from "@/lib/admin/github";
+import { commitFiles } from "@/lib/admin/github";
+import { formatDate } from "@/lib/posts";
 import type { RepoTarget } from "@/lib/admin/vault";
+import type { ManagedPost } from "@/components/admin/admin-app";
 
-/** Published posts, with delete. Editing is deliberately not offered — delete
- * and repost covers it, and an editor would need the raw file fetched back. */
+/** Published posts, with edit and delete. */
 export function PostList({
   token,
   target,
   posts,
+  editingSlug,
+  onEdit,
   onChanged,
 }: {
   token: string;
   target: RepoTarget;
-  posts: BlogFileEntry[];
+  posts: ManagedPost[];
+  editingSlug?: string;
+  onEdit: (post: ManagedPost) => void;
   onChanged: () => void;
 }) {
   const [busySlug, setBusySlug] = useState("");
   const [error, setError] = useState("");
 
-  async function handleDelete(post: BlogFileEntry) {
-    if (!confirm(`Delete "${post.slug}"? This commits the removal.`)) return;
+  async function handleDelete(post: ManagedPost) {
+    if (
+      !confirm(
+        `Delete "${post.draft.title || post.slug}"? This commits the removal.`,
+      )
+    ) {
+      return;
+    }
     setError("");
     setBusySlug(post.slug);
     try {
@@ -59,17 +70,40 @@ export function PostList({
           {posts.map((post) => (
             <li
               key={post.slug}
-              className="flex items-center justify-between gap-4 rounded-lg border border-border/60 px-3 py-2"
+              className={`flex items-center justify-between gap-4 rounded-lg border px-3 py-2 ${
+                editingSlug === post.slug
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-border/60"
+              }`}
             >
-              <span className="truncate font-mono text-[13px]">{post.slug}</span>
-              <button
-                type="button"
-                onClick={() => handleDelete(post)}
-                disabled={busySlug === post.slug}
-                className="shrink-0 font-mono text-[11px] text-muted-foreground hover:text-destructive disabled:opacity-50"
-              >
-                {busySlug === post.slug ? "deleting…" : "delete"}
-              </button>
+              <div className="min-w-0">
+                <p className="truncate text-[14px]">
+                  {post.draft.title || post.slug}
+                </p>
+                <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                  {post.draft.date ? formatDate(post.draft.date) : "—"} ·{" "}
+                  {post.slug}
+                  {post.draft.tags.length > 0 &&
+                    ` · ${post.draft.tags.map((t) => `#${t}`).join(" ")}`}
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => onEdit(post)}
+                  className="font-mono text-[11px] text-muted-foreground hover:text-primary"
+                >
+                  edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(post)}
+                  disabled={busySlug === post.slug}
+                  className="font-mono text-[11px] text-muted-foreground hover:text-destructive disabled:opacity-50"
+                >
+                  {busySlug === post.slug ? "deleting…" : "delete"}
+                </button>
+              </div>
             </li>
           ))}
         </ul>

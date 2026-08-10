@@ -103,11 +103,31 @@ The cover image slot in `app/blog/[slug]/page.tsx` is `aspect-[16/8]` with
 `object-cover`, which crops portrait images badly. The composer therefore
 inserts images inline into the body by default; "set as cover" is opt-in.
 
+## Editing existing posts
+
+Added after the first version shipped, at the owner's request.
+
+`listPosts` is followed by one `fetchFileText` per post so the list can show
+titles, dates and tags rather than bare slugs. `parsePostFile` reads the
+frontmatter back into composer fields — a small hand-written parser for the
+subset of YAML the blog uses, because `gray-matter` is server-only and this runs
+in the browser.
+
+Two rules the edit path holds to:
+
+- **The slug never changes on edit**, even if the title does. The URL is already
+  public and the post's images live under that slug.
+- **A cover is only re-pointed if it is one of this session's uploads.** An
+  existing post may reference an image elsewhere in `public/` — rewriting that
+  into the post's own folder would break it.
+
+The original publication date is preserved; only new posts get today's.
+
 ## Out of scope
 
-- Editing existing posts (delete + repost is enough for now).
 - Any change to `studio/` — it keeps working from the PC, independently.
 - Rich-text editing; the body stays Markdown.
+- Renaming a published post's slug, and moving its images with it.
 
 ## Owner action, separate from this work
 

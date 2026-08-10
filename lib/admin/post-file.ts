@@ -61,6 +61,78 @@ export function buildPostFile(draft: PostDraft & { date: string }): string {
   return `${buildFrontmatter(draft)}\n${draft.body.trim()}\n`;
 }
 
+/** Unwrap a YAML scalar. Our own writer emits JSON strings; hand-written posts
+ * may use single quotes or none at all. */
+function parseScalar(raw: string): string {
+  const value = raw.trim();
+  if (value.startsWith('"')) {
+    try {
+      return JSON.parse(value) as string;
+    } catch {
+      return value.slice(1, -1);
+    }
+  }
+  if (value.startsWith("'")) return value.slice(1, -1).replace(/''/g, "'");
+  return value;
+}
+
+function parseList(raw: string): string[] {
+  const value = raw.trim();
+  if (!value.startsWith("[")) return [];
+  const inner = value.slice(1, value.endsWith("]") ? -1 : undefined);
+  return inner
+    .split(",")
+    .map((item) => parseScalar(item))
+    .filter(Boolean);
+}
+
+/**
+ * Read back a post file into composer fields.
+ *
+ * This parses the subset of YAML the blog actually uses — flat `key: value`
+ * pairs plus an inline or block `tags` list — rather than pulling in a YAML
+ * library, since `gray-matter` is server-only and this runs in the browser.
+ */
+export function parsePostFile(raw: string): PostDraft & { date: string } {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw);
+  const body = match ? raw.slice(match[0].length) : raw;
+  const fields: Record<string, string> = {};
+  const tags: string[] = [];
+
+  if (match) {
+    const lines = match[1].split(/\r?\n/);
+    let collectingTags = false;
+
+    for (const line of lines) {
+      const blockItem = /^\s*-\s+(.*)$/.exec(line);
+      if (collectingTags && blockItem) {
+        tags.push(parseScalar(blockItem[1]));
+        continue;
+      }
+      collectingTags = false;
+
+      const pair = /^([A-Za-z_][\w-]*)\s*:\s*(.*)$/.exec(line);
+      if (!pair) continue;
+      const [, key, value] = pair;
+      if (key === "tags") {
+        if (value.trim() === "") collectingTags = true;
+        else tags.push(...parseList(value));
+        continue;
+      }
+      fields[key] = parseScalar(value);
+    }
+  }
+
+  return {
+    title: fields.title ?? "",
+    date: fields.date ?? new Date().toISOString().slice(0, 10),
+    tags,
+    excerpt: fields.excerpt ?? "",
+    cover: fields.cover || undefined,
+    body: body.replace(/^\r?\n/, "").trimEnd(),
+  };
+}
+
 const IMAGE_EXTENSIONS: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",

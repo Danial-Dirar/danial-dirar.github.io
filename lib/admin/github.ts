@@ -94,6 +94,29 @@ export async function listPosts(
     .sort((a, b) => b.slug.localeCompare(a.slug));
 }
 
+/** Raw text of one file at the target branch. */
+export async function fetchFileText(
+  token: string,
+  target: RepoTarget,
+  path: string,
+): Promise<string> {
+  const res = await fetch(
+    `${API}/repos/${target.owner}/${target.repo}/contents/${path}?ref=${target.branch}`,
+    {
+      headers: {
+        // `raw` returns the file body rather than a base64 JSON envelope.
+        accept: "application/vnd.github.raw",
+        authorization: `Bearer ${token}`,
+        "x-github-api-version": "2022-11-28",
+      },
+    },
+  );
+  if (!res.ok) {
+    throw new GitHubError(`Could not read ${path} (${res.status}).`, res.status);
+  }
+  return res.text();
+}
+
 type TreeEntry = {
   path: string;
   mode: "100644";

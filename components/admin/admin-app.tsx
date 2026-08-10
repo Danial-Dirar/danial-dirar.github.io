@@ -5,7 +5,12 @@ import { SetupForm } from "@/components/admin/setup-form";
 import { UnlockForm } from "@/components/admin/unlock-form";
 import { Composer } from "@/components/admin/composer";
 import { PostList } from "@/components/admin/post-list";
-import { listPosts, type BlogFileEntry } from "@/lib/admin/github";
+import {
+  fetchFileText,
+  listPosts,
+  type BlogFileEntry,
+} from "@/lib/admin/github";
+import { parsePostFile, type PostDraft } from "@/lib/admin/post-file";
 import {
   readVault,
   readVaultOnServer,
@@ -14,6 +19,11 @@ import {
 
 /** Drop the in-memory token after this long without interaction. */
 const IDLE_LOCK_MS = 15 * 60 * 1000;
+
+/** A published post with its parsed fields, ready to list or load for editing. */
+export type ManagedPost = BlogFileEntry & {
+  draft: PostDraft & { date: string };
+};
 
 export function AdminApp() {
   // localStorage is an external store: subscribing to it keeps this in sync
@@ -26,7 +36,8 @@ export function AdminApp() {
   );
 
   const [token, setToken] = useState("");
-  const [posts, setPosts] = useState<BlogFileEntry[]>([]);
+  const [posts, setPosts] = useState<ManagedPost[]>([]);
+  const [editing, setEditing] = useState<ManagedPost | null>(null);
   const [notice, setNotice] = useState("");
   const [loadError, setLoadError] = useState("");
 
@@ -37,7 +48,17 @@ export function AdminApp() {
     async (activeToken: string) => {
       if (!vault) return;
       try {
-        const next = await listPosts(activeToken, vault);
+        const entries = await listPosts(activeToken, vault);
+        // One extra request per post to read its frontmatter. Fine for a
+        // personal blog; revisit if the archive ever gets large.
+        const next = await Promise.all(
+          entries.map(async (entry) => ({
+            ...entry,
+            draft: parsePostFile(
+              await fetchFileText(activeToken, vault, entry.path),
+            ),
+          })),
+        );
         setPosts(next);
         setLoadError("");
       } catch (err) {
@@ -151,20 +172,43 @@ export function AdminApp() {
       )}
 
       <Composer
+        // Remounting on slug change re-seeds the fields from the post being
+        // edited without an effect that syncs props into state.
+        key={editing?.slug ?? "new"}
         token={token}
         target={vault}
         existingSlugs={posts.map((p) => p.slug)}
-        onPublished={(slug) => {
-          setNotice(`Published /blog/${slug} — live in about a minute.`);
+        editing={
+          editing
+            ? { slug: editing.slug, path: editing.path, draft: editing.draft }
+            : undefined
+        }
+        onPublished={(slug, wasEdit) => {
+          setNotice(
+            wasEdit
+              ? `Updated /blog/${slug} — live in about a minute.`
+              : `Published /blog/${slug} — live in about a minute.`,
+          );
+          setEditing(null);
           void loadPosts(token);
         }}
+        onCancelEdit={() => setEditing(null)}
       />
 
       <PostList
         token={token}
         target={vault}
         posts={posts}
-        onChanged={() => void loadPosts(token)}
+        editingSlug={editing?.slug}
+        onEdit={(post) => {
+          setEditing(post);
+          setNotice("");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        onChanged={() => {
+          setEditing(null);
+          void loadPosts(token);
+        }}
       />
     </>
   );

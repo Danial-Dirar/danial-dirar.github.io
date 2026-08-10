@@ -14,6 +14,7 @@ import {
   retargetImagePaths,
   slugify,
   uniqueSlug,
+  type PostDraft,
 } from "@/lib/admin/post-file";
 import type { RepoTarget } from "@/lib/admin/vault";
 
@@ -40,29 +41,42 @@ function readAsBase64(file: File): Promise<string> {
   });
 }
 
+/**
+ * Composes a new post, or edits an existing one when `editing` is supplied.
+ *
+ * The parent remounts this with a `key` when switching posts, so the fields
+ * below can initialise straight from props without syncing effects.
+ */
 export function Composer({
   token,
   target,
   existingSlugs,
+  editing,
   onPublished,
+  onCancelEdit,
 }: {
   token: string;
   target: RepoTarget;
   existingSlugs: string[];
-  onPublished: (slug: string) => void;
+  editing?: { slug: string; path: string; draft: PostDraft & { date: string } };
+  onPublished: (slug: string, wasEdit: boolean) => void;
+  onCancelEdit?: () => void;
 }) {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [tags, setTags] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [cover, setCover] = useState("");
+  const [title, setTitle] = useState(editing?.draft.title ?? "");
+  const [body, setBody] = useState(editing?.draft.body ?? "");
+  const [tags, setTags] = useState(editing?.draft.tags.join(", ") ?? "");
+  const [excerpt, setExcerpt] = useState(editing?.draft.excerpt ?? "");
+  const [cover, setCover] = useState(editing?.draft.cover ?? "");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  const draftSlug = uniqueSlug(slugify(title || "post"), existingSlugs);
+  // Editing keeps the original slug even if the title changes: the post's URL
+  // is already out in the world, and its images live under that slug.
+  const draftSlug =
+    editing?.slug ?? uniqueSlug(slugify(title || "post"), existingSlugs);
 
   function insertAtCursor(snippet: string) {
     const field = bodyRef.current;
@@ -140,15 +154,20 @@ export function Composer({
 
     setBusy(true);
     try {
-      const slug = uniqueSlug(slugify(title), existingSlugs);
+      const slug = editing?.slug ?? uniqueSlug(slugify(title), existingSlugs);
       const finalBody = retargetImagePaths(
         body,
         attachments.map((a) => a.name),
         slug,
       );
-      const finalCover = cover
-        ? imagePublicPath(slug, cover.split("/").pop() ?? "")
-        : undefined;
+
+      // Only a cover chosen from this session's uploads gets re-pointed at the
+      // post's folder. An existing post may reference an image somewhere else
+      // entirely (e.g. /work/…), and rewriting that would break it.
+      const coverFile = attachments.find((a) => cover.endsWith(`/${a.name}`));
+      const finalCover = coverFile
+        ? imagePublicPath(slug, coverFile.name)
+        : cover || undefined;
 
       const mdx = buildPostFile({
         title: title.trim(),
@@ -159,11 +178,16 @@ export function Composer({
           .filter(Boolean),
         excerpt: excerpt.trim() || deriveExcerpt(finalBody),
         cover: finalCover,
-        date: new Date().toISOString().slice(0, 10),
+        // Editing preserves the publication date; only new posts get today's.
+        date: editing?.draft.date ?? new Date().toISOString().slice(0, 10),
       });
 
       const files: PendingFile[] = [
-        { path: `content/blog/${slug}.mdx`, encoding: "utf-8", content: mdx },
+        {
+          path: editing?.path ?? `content/blog/${slug}.mdx`,
+          encoding: "utf-8",
+          content: mdx,
+        },
         ...attachments.map(
           (file): PendingFile => ({
             path: `public/blog/${slug}/${file.name}`,
@@ -173,16 +197,21 @@ export function Composer({
         ),
       ];
 
-      await commitFiles(token, target, `blog: ${title.trim()}`, files);
+      const message = editing
+        ? `blog: update ${slug}`
+        : `blog: ${title.trim()}`;
+      await commitFiles(token, target, message, files);
 
       attachments.forEach((a) => URL.revokeObjectURL(a.previewUrl));
-      setTitle("");
-      setBody("");
-      setTags("");
-      setExcerpt("");
-      setCover("");
+      if (!editing) {
+        setTitle("");
+        setBody("");
+        setTags("");
+        setExcerpt("");
+        setCover("");
+      }
       setAttachments([]);
-      onPublished(slug);
+      onPublished(slug, Boolean(editing));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Publish failed.");
     } finally {
@@ -192,6 +221,21 @@ export function Composer({
 
   return (
     <div className="mt-8 grid gap-5">
+      {editing && (
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-primary/40 bg-primary/5 px-3 py-2">
+          <span className="font-mono text-[12px]">
+            editing <span className="text-primary">{editing.slug}</span>
+          </span>
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            className="font-mono text-[11px] text-muted-foreground hover:text-foreground"
+          >
+            cancel
+          </button>
+        </div>
+      )}
+
       <div>
         <label className={labelClass} htmlFor="title">
           title
@@ -207,6 +251,7 @@ export function Composer({
         {title.trim() && (
           <p className="mt-1.5 font-mono text-[11px] text-muted-foreground">
             /blog/{draftSlug}
+            {editing && " · url stays the same"}
           </p>
         )}
       </div>
@@ -359,7 +404,13 @@ export function Composer({
 
       <div className="flex items-center gap-3">
         <Button type="button" size="lg" onClick={handlePublish} disabled={busy}>
-          {busy ? "Publishing…" : "Post"}
+          {busy
+            ? editing
+              ? "Saving…"
+              : "Publishing…"
+            : editing
+              ? "Save changes"
+              : "Post"}
         </Button>
         <span className="font-mono text-[11px] text-muted-foreground">
           commits to {target.owner}/{target.repo} — live in ~1 min

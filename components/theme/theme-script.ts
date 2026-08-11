@@ -1,11 +1,17 @@
 /**
- * Blocking anti-FOUC script. Emitted from the SERVER layout (not a client
- * component) so React 19 never tries to render it during a client render —
- * which is what triggered the next-themes "script tag" console error.
+ * Anti-FOUC theme correction.
  *
- * Runs before paint: reads the saved theme (default dark) and sets the
- * `.dark` class + color-scheme on <html> so there's no flash.
+ * The server already renders <html class="dark"> because dark is the default,
+ * so a visitor who has never touched the toggle gets dark in the very first
+ * painted frame with no script involved at all. This script only runs the
+ * correction for the minority who explicitly chose light.
+ *
+ * It must be emitted as a plain inline <script> in the server layout's <head>
+ * so it executes synchronously before the body paints. `next/script` with
+ * `strategy="beforeInteractive"` is NOT equivalent: it queues the code onto
+ * `self.__next_s` for the Next runtime to run later, which is after first
+ * paint — that is what used to make the site flash light on load.
  */
 export const THEME_STORAGE_KEY = "theme";
 
-export const themeInitScript = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');var d=t?t==='dark':true;var e=document.documentElement;e.classList.toggle('dark',d);e.style.colorScheme=d?'dark':'light';}catch(e){}})();`;
+export const themeInitScript = `(function(){try{if(localStorage.getItem('${THEME_STORAGE_KEY}')==='light'){var e=document.documentElement;e.classList.remove('dark');e.style.colorScheme='light';}}catch(e){}})();`;

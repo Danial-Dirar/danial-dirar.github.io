@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { themeInitScript } from "@/components/theme/theme-script";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -32,17 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // `dark` ships in the static HTML because dark is the site default — the
+    // first painted frame is already dark, with no script needed.
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      style={{ colorScheme: "dark" }}
     >
       <head>
-        {/* Blocking anti-FOUC theme script — next/script beforeInteractive runs
-            it before hydration without confusing React 19's head hydration. */}
-        <Script
+        {/* A plain inline script, NOT next/script: this has to run synchronously
+            before the body paints, and only undoes `dark` for visitors who
+            explicitly chose light. See components/theme/theme-script.ts. */}
+        <script
           id="theme-init"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
       </head>

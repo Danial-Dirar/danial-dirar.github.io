@@ -1,0 +1,18 @@
+---
+title: "The consumer Nvidia 3000 Series just got a tensor-boost"
+date: "2026-10-24"
+tags: ["LocalLLM", "GPU", "AI"]
+excerpt: "Used RTX 3090 prices might be about to go up. An open source project just unlocked the full FP16/BF16 tensor rate on RTX 30 series cards. Same card adn same pow"
+---
+
+Used RTX 3090 prices might be about to go up.
+
+An open source project just unlocked the full FP16/BF16 tensor rate on RTX 30 series cards. Same card adn same power limit but up to about 80% more matrix throughput in reported benchmarks.
+
+The trick is simple. A kernel module flips the speed registers at boot, before NVIDIA’s driver takes over. The stock driver stays as it is. Also you can most probably put it in the grub entry to avoid the hassle for each time boot. Oh and currently its for linux only.
+
+I run local LLMs and image models on a 3090, so this one caught my attention. Prefill and diffusion get the boost. Decode stays memory bound, so don’t expect double tokens per second. I wonder how the modded 48gb 3090 would perform.
+
+Worth a look: https://github.com/Zagitta/gpu-unlock
+
+![](/blog/the-consumer-nvidia-3000-series-just-got-a-tensor-boost/asus-rog-strix-geforce-rtx-3090-oc-04-2048x1022-1611320078.jpg)

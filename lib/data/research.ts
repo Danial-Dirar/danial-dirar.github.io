@@ -40,7 +40,7 @@ export const research: ResearchPaper[] = [
   {
     id: "mar-potential-barind",
     title:
-      "Engineering hydrological resilience: Quantitative assessment of managed aquifer recharge (MAR) potential utilizing advanced horizontal flow treatment in water-stressed regions",
+      "Engineering hydrological resilience: Quantitative assessment of managed aquifer recharge (MAR) potential utilizing advanced horizontal flow treatment in water stressed regions",
     status: "published",
     authors: [
       A("Md. Iquebal Hossain"),

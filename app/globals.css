@@ -53,48 +53,8 @@
 }
 
 :root {
-  /* soft warm paper — not a flashbang white */
-  --background: oklch(0.955 0.006 105);
-  --foreground: oklch(0.2 0.012 160);
-  --card: oklch(0.975 0.005 105);
-  --card-foreground: oklch(0.2 0.012 160);
-  --popover: oklch(0.975 0.005 105);
-  --popover-foreground: oklch(0.2 0.012 160);
-  --primary: oklch(0.5 0.12 162);
-  --primary-foreground: oklch(0.975 0.005 105);
-  --secondary: oklch(0.92 0.008 110);
-  --secondary-foreground: oklch(0.26 0.012 160);
-  --muted: oklch(0.92 0.008 110);
-  --muted-foreground: oklch(0.48 0.015 150);
-  --accent: oklch(0.9 0.02 150);
-  --accent-foreground: oklch(0.3 0.06 162);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.87 0.01 110);
-  --input: oklch(0.87 0.01 110);
-  --ring: oklch(0.52 0.13 162);
-  --brand-1: oklch(0.52 0.13 162);
-  --brand-2: oklch(0.72 0.14 75);
-  /* Water only: rivers, the water table, aquifer depth. Never decorative. */
-  --aquifer: oklch(0.55 0.11 228);
-  /* Barind's red-brown terrace clay. */
-  --clay: oklch(0.58 0.1 50);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
+  /* The site is dark only — there is no light theme. `.dark` stays on
+     <html> because shadcn's `dark:` variant keys off it. */
   --background: oklch(0.16 0.012 165);
   --foreground: oklch(0.93 0.01 160);
   --card: oklch(0.2 0.014 165);
@@ -130,7 +90,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --radius: 0.625rem;
 }
+
 
 @layer base {
   * {
@@ -159,11 +121,6 @@
       linear-gradient(to right, oklch(0.87 0.19 162 / 5%) 1px, transparent 1px),
       linear-gradient(to bottom, oklch(0.87 0.19 162 / 5%) 1px, transparent 1px);
     background-size: 44px 44px;
-  }
-  :root:not(.dark) .bg-grid {
-    background-image:
-      linear-gradient(to right, oklch(0.52 0.13 162 / 7%) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0.52 0.13 162 / 7%) 1px, transparent 1px);
   }
   .mask-fade {
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
@@ -207,17 +164,6 @@
   50%, 100% { opacity: 0; }
 }
 
-/* Floating background code snippets */
-.code-float {
-  @apply pointer-events-none absolute select-none font-mono text-xs leading-relaxed;
-  color: var(--brand-1);
-  opacity: 0.09;
-  filter: blur(0.6px);
-}
-:root:not(.dark) .code-float {
-  opacity: 0.1;
-}
-
 /* ── Blog prose (MDX) ─────────────────────────────────────── */
 .prose-blog {
   @apply max-w-none text-[15px] leading-7 text-foreground/90 md:text-base md:leading-8;
@@ -257,15 +203,6 @@
 }
 .prose-blog pre [data-line] {
   @apply px-0;
-}
-/* Shiki dual themes: dark theme vars win under .dark */
-.dark .prose-blog pre,
-.dark .prose-blog pre span {
-  color: var(--shiki-dark) !important;
-  background-color: transparent !important;
-}
-.dark .prose-blog pre {
-  background-color: var(--card) !important;
 }
 /* ── Motion primitives ────────────────────────────────────── */
 :root {
@@ -308,51 +245,6 @@
 .nav-link:hover::after,
 .nav-link[aria-current="page"]::after {
   transform: scaleX(1);
-}
-
-/* ── Theme toggle: the sun folds into a moon ──────────────── */
-.toggle-disc {
-  fill: currentColor;
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 0.5s var(--ease-out-expo);
-}
-.toggle-bite {
-  transition: transform 0.55s var(--ease-out-expo);
-}
-.toggle-rays {
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  transform-origin: 12px 12px;
-  transition:
-    transform 0.55s var(--ease-out-expo),
-    opacity 0.3s ease 0.08s;
-}
-/* Dark (the default) shows the moon: the bite covers the disc, rays retract. */
-.dark .toggle-bite {
-  transform: translateX(-10.5px);
-}
-.dark .toggle-disc {
-  transform: scale(1.45);
-}
-.dark .toggle-rays {
-  opacity: 0;
-  transform: scale(0.35) rotate(-70deg);
-}
-
-/* The theme sweep: the new theme grows out of the toggle as a circle.
-   Scoped to .theme-sweep so route-change transitions keep their crossfade. */
-html.theme-sweep::view-transition-old(root),
-html.theme-sweep::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-html.theme-sweep::view-transition-old(root) {
-  z-index: 1;
-}
-html.theme-sweep::view-transition-new(root) {
-  z-index: 2;
 }
 
 /* Route changes: a short crossfade, and a morph for shared project covers. */
@@ -510,12 +402,6 @@ html.theme-sweep::view-transition-new(root) {
   stroke-opacity: 0.2;
   stroke-width: 1.4;
 }
-:root:not(.dark) .contour-field path {
-  stroke-opacity: 0.16;
-}
-:root:not(.dark) .contour-field path[data-index="true"] {
-  stroke-opacity: 0.3;
-}
 
 .portrait-frame img {
   transform-origin: 50% 35%;
@@ -596,34 +482,147 @@ html.theme-sweep::view-transition-new(root) {
   stroke-dasharray: 0.012 0.05;
   opacity: 0;
 }
-.field-map .fm-pin-dot {
-  fill: var(--primary);
-  stroke: var(--background);
-  stroke-width: 2;
-}
-.field-map .fm-pin[data-kind="home"] .fm-pin-dot {
-  fill: var(--brand-2);
-}
-.field-map .fm-ripple {
-  fill: none;
-  stroke: var(--aquifer);
+/* The survey traverse between the Barind sites. */
+.field-map .fm-leg {
+  stroke: var(--primary);
   stroke-width: 1;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.field-map .fm-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  fill: var(--foreground);
-  paint-order: stroke;
-  stroke: var(--background);
-  stroke-width: 3px;
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
 }
 
-/* The coast draws itself, Barind and the rivers arrive, then the pins land.
-   Hidden states are scoped to .fm-armed (set by script), so without JS the
-   map simply renders whole. */
+/* Sites are HTML buttons laid over the SVG, so they stay crisp, focusable
+   and readable at any map size. */
+.fm-sites {
+  position: absolute;
+  inset: 0;
+}
+.fm-site {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--primary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fm-site:focus-visible {
+  outline: 1px solid var(--primary);
+  outline-offset: 2px;
+}
+.fm-reticle {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px color-mix(in oklch, var(--primary) 45%, transparent));
+  transition:
+    transform 0.5s var(--ease-out-expo),
+    opacity 0.3s ease;
+}
+.fm-reticle-core {
+  fill: currentColor;
+  stroke: none;
+}
+/* Dhaka is home — `~`, as a shell prompt would put it. */
+.fm-home {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--brand-2);
+  border-radius: 4px;
+  background: var(--background);
+  color: var(--brand-2);
+  font: 600 12px/1 var(--font-mono);
+  transition:
+    transform 0.5s var(--ease-out-expo),
+    opacity 0.3s ease;
+}
+.fm-name {
+  position: absolute;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: color-mix(in oklch, var(--background) 82%, transparent);
+  color: var(--foreground);
+  font: 10.5px/1 var(--font-mono);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+.fm-site[data-label="right"] .fm-name {
+  left: calc(100% + 1px);
+  top: 50%;
+  translate: 0 -50%;
+}
+.fm-site[data-label="below"] .fm-name {
+  left: -3px;
+  top: calc(100% + 2px);
+}
+.fm-site:hover .fm-reticle,
+.fm-site:focus-visible .fm-reticle,
+.fm-site[data-active] .fm-reticle {
+  transform: rotate(45deg) scale(1.2);
+}
+.fm-site:hover .fm-home,
+.fm-site:focus-visible .fm-home,
+.fm-site[data-active] .fm-home {
+  transform: scale(1.15);
+}
+.fm-site:hover .fm-name,
+.fm-site:focus-visible .fm-name,
+.fm-site[data-active] .fm-name {
+  color: var(--primary);
+}
+.fm-site[data-kind="home"]:hover .fm-name,
+.fm-site[data-kind="home"][data-active] .fm-name {
+  color: var(--brand-2);
+}
+
+/* Recharge: three drops sink into the ground as a site locks. */
+.fm-drops {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  pointer-events: none;
+}
+.fm-drops i {
+  position: absolute;
+  left: calc(var(--k) * 3px - 4px);
+  width: 2px;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--aquifer);
+  opacity: 0;
+}
+
+/* The survey cursor — the terminal's block cursor, out in the field. */
+.fm-cursor {
+  position: absolute;
+  width: 7px;
+  height: 13px;
+  margin: -17px 0 0 7px;
+  background: var(--primary);
+  box-shadow: 0 0 10px color-mix(in oklch, var(--primary) 60%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    left 0.5s var(--ease-out-expo),
+    top 0.5s var(--ease-out-expo),
+    opacity 0.3s ease;
+}
+.fm-cursor[data-on] {
+  opacity: 1;
+}
+
+/* The coast draws itself, Barind and the rivers arrive, then the cursor
+   surveys the sites. Hidden states are scoped to .fm-armed (set by script),
+   so without JS the map simply renders whole. */
 .field-map.fm-armed .fm-outline {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -633,11 +632,28 @@ html.theme-sweep::view-transition-new(root) {
 .field-map.fm-armed .fm-river {
   opacity: 0;
 }
-.field-map.fm-armed .fm-pin {
+.field-map.fm-armed .fm-leg {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.field-map.fm-armed .fm-leg.is-drawn {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.5s var(--ease-out-expo);
+}
+.field-map.fm-armed .fm-site:not([data-locked]) .fm-reticle,
+.field-map.fm-armed .fm-site:not([data-locked]) .fm-home {
   opacity: 0;
-  transform: scale(0.2);
-  transform-box: fill-box;
-  transform-origin: center;
+  transform: scale(2.4) rotate(90deg);
+}
+.field-map.fm-armed .fm-site:not([data-locked]) .fm-name {
+  clip-path: inset(0 100% 0 0);
+}
+.field-map.fm-armed .fm-site[data-locked] .fm-name {
+  animation: fm-type calc(var(--n) * 40ms) steps(var(--n)) both;
+}
+.field-map.fm-armed .fm-site[data-locked] .fm-drops i {
+  animation: fm-drop 0.9s ease-in both;
+  animation-delay: calc(120ms + var(--k) * 90ms);
 }
 .field-map.fm-armed.is-in .fm-outline {
   stroke-dashoffset: 0;
@@ -654,22 +670,14 @@ html.theme-sweep::view-transition-new(root) {
   opacity: 1;
   transition: opacity 0.8s ease 1.3s;
 }
-.field-map.fm-armed.is-in .fm-pin {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 0.4s ease calc(1.6s + var(--i, 0) * 0.12s),
-    transform 0.6s var(--ease-out-expo) calc(1.6s + var(--i, 0) * 0.12s);
-}
 @media (prefers-reduced-motion: no-preference) {
   .field-map.is-in .fm-flow {
     opacity: 0.9;
     transition: opacity 0.6s ease 2s;
     animation: river-flow 9s linear infinite;
   }
-  .field-map.is-in .fm-ripple {
-    animation: ripple 3.2s ease-out infinite;
-    animation-delay: calc(2s + var(--r, 0) * 1.05s);
+  .fm-cursor[data-on] {
+    animation: cursor-blink 1.06s steps(1) infinite;
   }
 }
 @keyframes river-flow {
@@ -677,14 +685,25 @@ html.theme-sweep::view-transition-new(root) {
     stroke-dashoffset: -0.62;
   }
 }
-@keyframes ripple {
+@keyframes fm-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes fm-drop {
   0% {
-    opacity: 0.8;
-    transform: scale(0.4);
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: scale(3.2);
+    transform: translateY(14px);
   }
 }
 

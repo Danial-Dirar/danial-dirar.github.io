@@ -31,8 +31,9 @@ export async function generateMetadata({
   };
 }
 
+// The site is dark only, so code blocks use a single dark theme.
 const prettyCodeOptions = {
-  theme: { dark: "github-dark-default", light: "github-light-default" },
+  theme: "github-dark-default",
   keepBackground: false,
 };
 

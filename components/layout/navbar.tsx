@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { nav, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -46,11 +45,9 @@ export function Navbar() {
               {item.label.toLowerCase()}
             </Link>
           ))}
-          <ThemeToggle className="ml-2" />
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}

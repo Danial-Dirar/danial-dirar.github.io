@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GitHubIcon } from "@/components/shared/icons";
 import { ContourField } from "@/components/water/contour-field";
@@ -43,6 +44,32 @@ const TRANSCRIPT: Line[] = SCRIPT.flatMap((entry) => [
   { kind: "cmd" as const, text: entry.cmd, done: true },
   ...entry.out.map((text) => ({ kind: "out" as const, text, done: true })),
 ]);
+
+function TerminalLines({ lines, finished }: { lines: Line[]; finished: boolean }) {
+  return (
+    <>
+      {lines.map((line, i) => (
+        <div key={i} className="whitespace-pre-wrap">
+          {line.kind === "cmd" ? (
+            <>
+              <span className="text-primary">$ </span>
+              <span>{line.text}</span>
+              {!line.done && <span className="cursor-blink" aria-hidden />}
+            </>
+          ) : (
+            <span className="text-muted-foreground">{line.text}</span>
+          )}
+        </div>
+      ))}
+      {finished && (
+        <div>
+          <span className="text-primary">$ </span>
+          <span className="cursor-blink" aria-hidden />
+        </div>
+      )}
+    </>
+  );
+}
 
 /**
  * Starts from the finished transcript, so the terminal reads correctly without
@@ -123,30 +150,51 @@ export function TerminalHero() {
         {/* One orchestrated entrance, in CSS so it runs from first paint and
             ends visible without JavaScript: the portrait fills from the bottom
             like a rising water level, then the words, then the terminal types. */}
-        <figure className="hero-portrait order-first lg:order-last">
-          <div className="terminal-window portrait-frame">
-            <div className="terminal-titlebar">
-              <span className="terminal-dot bg-red-400/80" />
-              <span className="terminal-dot bg-amber-400/80" />
-              <span className="terminal-dot bg-emerald-400/80" />
-              <span className="ml-2 truncate font-mono text-xs text-muted-foreground">
-                feh ~/photos/danial.jpg
-              </span>
-            </div>
-            <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/11] lg:aspect-[4/5]">
-              <Image
-                src={asset(founderPhoto.src)}
-                alt={founderPhoto.alt}
-                fill
-                priority
-                sizes="(min-width: 1024px) 336px, 100vw"
-                placeholder="blur"
-                blurDataURL={founderPhoto.blurDataURL}
-                className="object-cover"
-                style={{ objectPosition: "50% 30%" }}
-              />
-            </div>
+        <figure className="hero-portrait terminal-window portrait-frame order-first lg:order-last">
+          <div className="terminal-titlebar">
+            <span className="terminal-dot bg-red-400/80" />
+            <span className="terminal-dot bg-amber-400/80" />
+            <span className="terminal-dot bg-emerald-400/80" />
+            <span className="ml-2 truncate font-mono text-xs text-muted-foreground">
+              feh ~/photos/danial.jpg
+            </span>
           </div>
+          <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/11] lg:aspect-[4/5]">
+            <Image
+              src={asset(founderPhoto.src)}
+              alt={founderPhoto.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 336px, 100vw"
+              placeholder="blur"
+              blurDataURL={founderPhoto.blurDataURL}
+              className="object-cover"
+              style={{ objectPosition: "50% 42%" }}
+            />
+          </div>
+          {/* Status bar under the photo: the two places people go next. */}
+          <figcaption className="flex items-center justify-between gap-3 border-t border-border/60 bg-secondary/60 px-3 py-2.5 font-mono text-xs">
+            <a
+              href={site.social.scholar}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
+            >
+              <GraduationCap className="size-3.5" aria-hidden />
+              Google Scholar
+              <ArrowUpRight className="size-3" aria-hidden />
+            </a>
+            <Link
+              href="/about"
+              className="group inline-flex items-center gap-1.5 text-primary hover:underline hover:underline-offset-4"
+            >
+              more about me
+              <ArrowRight
+                className="size-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                aria-hidden
+              />
+            </Link>
+          </figcaption>
         </figure>
 
         <div>
@@ -211,31 +259,17 @@ export function TerminalHero() {
                   {site.handle}@haifa: ~
                 </span>
               </div>
-              <div
-                className="terminal-body min-h-60 text-left"
-                aria-label="Animated terminal introduction"
-              >
-                {lines.map((line, i) => (
-                  <div key={i} className="whitespace-pre-wrap">
-                    {line.kind === "cmd" ? (
-                      <>
-                        <span className="text-primary">$ </span>
-                        <span>{line.text}</span>
-                        {!line.done && (
-                          <span className="cursor-blink" aria-hidden />
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-muted-foreground">{line.text}</span>
-                    )}
-                  </div>
-                ))}
-                {finished && (
-                  <div>
-                    <span className="text-primary">$ </span>
-                    <span className="cursor-blink" aria-hidden />
-                  </div>
-                )}
+              {/* Two layers in one grid cell. The full transcript sits underneath,
+                  invisible, so the box has its final height from the first frame
+                  and typing never pushes the page down; it is also what screen
+                  readers get. The typed layer on top is decoration. */}
+              <div className="terminal-body grid text-left">
+                <div className="col-start-1 row-start-1 opacity-0 select-none">
+                  <TerminalLines lines={TRANSCRIPT} finished />
+                </div>
+                <div className="col-start-1 row-start-1" aria-hidden="true">
+                  <TerminalLines lines={lines} finished={finished} />
+                </div>
               </div>
             </div>
           </div>

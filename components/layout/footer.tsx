@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GraduationCap, Mail } from "lucide-react";
-import { GitHubIcon } from "@/components/shared/icons";
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/shared/icons";
 import { nav, site } from "@/lib/site";
 
 export function Footer() {
@@ -41,6 +41,24 @@ export function Footer() {
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             <GraduationCap className="size-4" />
+          </a>
+          <a
+            href={site.social.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <LinkedInIcon className="size-4" />
+          </a>
+          <a
+            href={site.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="WhatsApp"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <WhatsAppIcon className="size-4" />
           </a>
           <a
             href={`mailto:${site.email}`}

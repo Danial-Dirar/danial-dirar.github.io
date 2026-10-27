@@ -1,6 +1,7 @@
 import { ArrowUpRight, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GitHubIcon } from "@/components/shared/icons";
+import { ResultDiff } from "@/components/research/result-diff";
 import { doiUrl, type ResearchPaper } from "@/lib/data/research";
 import { cn } from "@/lib/utils";
 
@@ -45,21 +46,7 @@ export function PaperCard({ paper }: { paper: ResearchPaper }) {
           ))}
         </p>
 
-        {/* result highlights */}
-        {paper.highlights && (
-          <div className="mt-5 grid grid-cols-3 gap-3 rounded-lg border border-border/50 bg-secondary/40 p-4">
-            {paper.highlights.map((h) => (
-              <div key={h.label} className="text-center">
-                <div className="font-heading text-lg font-bold text-primary md:text-xl">
-                  {h.value}
-                </div>
-                <div className="mt-1 text-[11px] leading-tight text-muted-foreground">
-                  {h.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {paper.changes && <ResultDiff changes={paper.changes} />}
 
         {/* abstract — always visible */}
         <p className="mt-5 border-t border-border/50 pt-4 text-sm leading-relaxed text-foreground/85">

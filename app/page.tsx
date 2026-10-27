@@ -5,16 +5,21 @@ import { ProjectCard } from "@/components/shared/project-card";
 import { PostCard } from "@/components/shared/post-card";
 import { Reveal } from "@/components/motion/reveal";
 import { FieldMap } from "@/components/water/field-map";
-import { FieldLog, type FieldFigure } from "@/components/water/field-log";
+import { WaterBudget, type BudgetRow } from "@/components/water/water-budget";
 import { featuredProjects } from "@/lib/data/projects";
 import { getAllPosts } from "@/lib/blog";
 
-/** Pulled from the two Applied Water Science papers and the thesis. */
-const FIELD_FIGURES: FieldFigure[] = [
-  { value: 3315, label: "feasible MAR sites identified" },
-  { value: 27.1, decimals: 1, unit: "M m³", label: "recharge potential a year" },
-  { value: 2.01, decimals: 2, unit: "m", label: "water-table rise over seven years" },
-  { value: 109, label: "wells in the forecasting thesis" },
+/**
+ * The Barind water budget, from Hossain et al. (2026, 2025) in Applied Water
+ * Science and the forecasting thesis. Bars use the paper's own proportions:
+ * 27.10 of 50.61 Mm³ of runoff is rechargeable (53.5%).
+ */
+const WATER_BUDGET: BudgetRow[] = [
+  { key: "runoff", value: "50.61 Mm³/yr", fill: 1, tone: "whole" },
+  { key: "recharge", value: "27.10 Mm³/yr", fill: 27.1 / 50.61, tone: "part", note: "53.5%" },
+  { key: "sites", value: "3,315", note: "MAR points on 377 km of canals and 257 acres of beels" },
+  { key: "water table", value: "+2.01 m", note: "at the pilot system, 2015–2021" },
+  { key: "forecast", value: "109 wells", note: "monthly, in the thesis" },
 ];
 
 function SectionHeader({
@@ -27,8 +32,8 @@ function SectionHeader({
   linkLabel: string;
 }) {
   return (
-    <div className="flex items-end justify-between gap-4">
-      <h2 className="font-mono text-xl font-semibold tracking-tight md:text-2xl">
+    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+      <h2 className="font-mono text-lg font-semibold tracking-tight sm:text-xl md:text-2xl">
         <span className="text-primary">$ </span>
         {command}
       </h2>
@@ -63,7 +68,11 @@ export default function HomePage() {
               through canals and reservoirs — and how far ahead the wells can be forecast.
             </p>
             <div className="mt-8 max-w-xl">
-              <FieldLog command="grep -h result *.bib thesis/summary.txt" figures={FIELD_FIGURES} />
+              <WaterBudget
+                command="water-budget --tract barind"
+                rows={WATER_BUDGET}
+                source="Hossain et al., Applied Water Science 16 (2026) and 15 (2025)"
+              />
             </div>
           </div>
           <FieldMap />

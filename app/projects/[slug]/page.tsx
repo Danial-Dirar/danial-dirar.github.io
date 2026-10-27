@@ -127,18 +127,26 @@ export default async function ProjectPage({
           )}
         </figure>
 
+        {/* Metrics as a spec sheet — key, dotted leader, value — the way a
+            tool like nvidia-smi prints them, not as tiles of big numbers. */}
         {project.highlights && (
-          <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {project.highlights.map((h) => (
-              <div key={h.label} className="rounded-lg border border-border/60 bg-card/50 p-4">
-                <dt className="sr-only">{h.label}</dt>
-                <dd>
-                  <span className="block font-heading text-xl font-bold text-primary">{h.value}</span>
-                  <span className="mt-1 block text-xs leading-snug text-muted-foreground">{h.label}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-10 rounded-xl border border-border/60 bg-card/40 px-4 py-4 font-mono text-[13px] md:px-5">
+            <p className="text-muted-foreground">
+              <span className="text-primary">$ </span>cat metrics.txt
+            </p>
+            <dl className="mt-3 space-y-1.5">
+              {project.highlights.map((h) => (
+                <div key={h.label} className="flex items-baseline gap-2">
+                  <dt className="min-w-0 text-muted-foreground">{h.label}</dt>
+                  <span
+                    className="min-w-6 flex-1 translate-y-[-0.2em] border-b border-dotted border-border"
+                    aria-hidden
+                  />
+                  <dd className="shrink-0 font-semibold text-primary tabular-nums">{h.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         )}
 
         <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem]">

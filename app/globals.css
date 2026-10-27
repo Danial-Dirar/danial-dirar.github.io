@@ -146,7 +146,7 @@
   @apply size-3 rounded-full;
 }
 .terminal-body {
-  @apply px-4 py-4 font-mono text-[13px] leading-relaxed md:px-5 md:text-sm;
+  @apply px-4 py-4 font-mono text-[12px] leading-relaxed sm:text-[13px] md:px-5 md:text-sm;
 }
 
 /* Blinking block cursor */
@@ -216,7 +216,6 @@
       from {
         opacity: 0;
         translate: var(--reveal-x, 0px) var(--reveal-y, 28px);
-        filter: blur(8px);
       }
     }
     .reveal {
@@ -403,15 +402,9 @@
   stroke-width: 1.4;
 }
 
-.portrait-frame img {
-  transform-origin: 50% 35%;
-}
 @media (prefers-reduced-motion: no-preference) {
   .contour-field svg {
     animation: contour-drift 48s ease-in-out infinite alternate;
-  }
-  .portrait-frame img {
-    animation: kenburns 20s var(--ease-out-expo) both;
   }
 }
 @keyframes contour-drift {
@@ -419,36 +412,112 @@
     transform: translate3d(-2.5%, -1.5%, 0) scale(1.04);
   }
 }
-@keyframes kenburns {
-  from {
-    transform: scale(1.14);
-  }
-  to {
-    transform: scale(1);
-  }
-}
 
+/* The portrait entrance: a card-coloured veil drains upward (scaleY from the
+   top edge) while a water line rides its lower edge. Both are transforms on
+   their own layers, so nothing is re-rasterised mid-animation — the photo
+   itself never moves or scales. At rest (and under reduced motion) the veil
+   is collapsed and the line hidden. */
+.portrait-veil,
+.portrait-waterline {
+  position: absolute;
+  inset-inline: 0;
+  pointer-events: none;
+}
+.portrait-veil {
+  inset-block: 0;
+  background: var(--card);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.portrait-waterline {
+  top: -100%;
+  height: 100%;
+  border-bottom: 2px solid var(--aquifer);
+  box-shadow: 0 10px 24px -12px var(--aquifer);
+  opacity: 0;
+}
 @media (prefers-reduced-motion: no-preference) {
   .hero-portrait {
-    animation: water-rise 1.1s var(--ease-out-expo) both;
+    animation: hero-rise 0.5s var(--ease-out-expo) both;
+  }
+  .portrait-veil {
+    animation: veil-drain 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+  }
+  .portrait-waterline {
+    animation: waterline-rise 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
   }
   .hero-rise {
     animation: hero-rise 0.6s var(--ease-out-expo) both;
     animation-delay: var(--d, 0s);
   }
 }
-@keyframes water-rise {
+@keyframes veil-drain {
   from {
-    clip-path: inset(100% 0 0 0 round 0.9rem);
+    transform: scaleY(1);
   }
   to {
-    clip-path: inset(0 0 0 0 round 0.9rem);
+    transform: scaleY(0);
+  }
+}
+@keyframes waterline-rise {
+  0% {
+    transform: translateY(100%);
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
   }
 }
 @keyframes hero-rise {
   from {
     opacity: 0;
     transform: translateY(14px);
+  }
+}
+
+/* Hero contact: opens in place under the buttons. */
+.contact-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.4s var(--ease-out-expo),
+    opacity 0.3s ease;
+}
+.contact-drawer[data-open] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.contact-chip {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--card) 85%, transparent);
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.contact-chip:hover,
+.contact-chip:focus-visible {
+  border-color: color-mix(in oklch, var(--primary) 50%, transparent);
+  color: var(--primary);
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-drawer {
+    transition: none;
   }
 }
 
@@ -705,6 +774,40 @@
     opacity: 0;
     transform: translateY(14px);
   }
+}
+
+/* ── Water budget: terminal progress cells ─────────────────── */
+.wb-bar {
+  display: inline-grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  gap: 2px;
+  min-width: 7rem;
+  max-width: 13rem;
+  height: 0.62rem;
+}
+.wb-bar i {
+  border-radius: 1px;
+  background: color-mix(in oklch, var(--aquifer) 12%, transparent);
+}
+.wb-bar i[data-on] {
+  background: color-mix(in oklch, var(--aquifer) 42%, transparent);
+}
+.wb-bar[data-tone="part"] i[data-on] {
+  background: var(--aquifer);
+  box-shadow: 0 0 6px color-mix(in oklch, var(--aquifer) 50%, transparent);
+}
+/* Armed by script: filled cells start dark, then light up left to right —
+   the runoff first, then the share recharge recovers. Opacity only. */
+.water-budget.wb-armed .wb-bar i[data-on] {
+  opacity: 0.15;
+}
+.water-budget.wb-armed.is-in .wb-bar i[data-on] {
+  opacity: 1;
+  transition: opacity 0.18s ease calc(var(--c) * 40ms + var(--o, 0ms));
+}
+.water-budget .wb-bar[data-tone="part"] {
+  --o: 850ms;
 }
 
 /* ── Timeline: the rail draws down as it scrolls in ───────── */

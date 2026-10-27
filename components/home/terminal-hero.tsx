@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, GraduationCap } from "lucide-react";
+import { ChevronDown, FolderOpen, GraduationCap, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GitHubIcon } from "@/components/shared/icons";
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/shared/icons";
+import { cn } from "@/lib/utils";
 import { ContourField } from "@/components/water/contour-field";
 import { founderPhoto } from "@/lib/data/founder";
 import { asset } from "@/lib/asset";
@@ -15,19 +16,19 @@ import { site } from "@/lib/site";
  * The terminal script the hero "types". Commands are typed character by
  * character; outputs print instantly on the next tick (like a real shell).
  */
+// Every output line stays under ~38 characters so nothing wraps mid-word on
+// a 360px phone, where the terminal fits about 39 at 12px.
 const SCRIPT: { cmd: string; out: string[] }[] = [
-  { cmd: "whoami", out: [`${site.fullName} — ${site.role}`] },
+  { cmd: "whoami", out: [site.fullName, `${site.role}, Dhaka`] },
   {
     cmd: "cat focus.txt",
     out: [
-      "Machine learning, generative AI, local AI for business",
-      "Groundwater forecasting in the Barind Tract",
+      "Machine learning and generative AI",
+      "Local AI, tailored for business",
+      "Groundwater forecasting, Barind",
     ],
   },
-  {
-    cmd: "ls research/",
-    out: ["mar-field-performance.pdf  mar-potential.pdf  thesis/"],
-  },
+  { cmd: "ls research/", out: ["mar-2025.pdf  mar-2026.pdf  thesis/"] },
   { cmd: "./contact --now", out: [`→ ${site.email}`] },
 ];
 
@@ -141,16 +142,19 @@ function useTerminalScript() {
 
 export function TerminalHero() {
   const { lines, finished } = useTerminalScript();
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <section className="relative isolate overflow-hidden pt-20 pb-14 md:pt-28 md:pb-20">
       <ContourField />
 
-      <div className="container-page grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:gap-14">
+      <div className="container-page grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
         {/* One orchestrated entrance, in CSS so it runs from first paint and
-            ends visible without JavaScript: the portrait fills from the bottom
-            like a rising water level, then the words, then the terminal types. */}
-        <figure className="hero-portrait terminal-window portrait-frame order-first lg:order-last">
+            ends visible without JavaScript: a veil drains off the portrait
+            behind a rising water line, then the words, then the terminal types.
+            Only transform and opacity animate, so it stays smooth while the
+            page is still loading and hydrating. */}
+        <figure className="hero-portrait terminal-window order-first mx-auto w-full max-w-sm lg:order-last lg:max-w-none">
           <div className="terminal-titlebar">
             <span className="terminal-dot bg-red-400/80" />
             <span className="terminal-dot bg-amber-400/80" />
@@ -159,42 +163,24 @@ export function TerminalHero() {
               feh ~/photos/danial.jpg
             </span>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/11] lg:aspect-[4/5]">
+          {/* The photo's own 3:4 ratio at every width, so phones never crop it.
+              The blur sits behind the image rather than on it, so the sharp
+              photo simply paints over it instead of swapping in. */}
+          <div
+            className="relative aspect-[3/4] overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `url("${founderPhoto.blurDataURL}")` }}
+          >
             <Image
               src={asset(founderPhoto.src)}
               alt={founderPhoto.alt}
               fill
               priority
-              sizes="(min-width: 1024px) 336px, 100vw"
-              placeholder="blur"
-              blurDataURL={founderPhoto.blurDataURL}
+              sizes="(min-width: 1024px) 320px, (min-width: 640px) 384px, 100vw"
               className="object-cover"
-              style={{ objectPosition: "50% 42%" }}
             />
+            <span className="portrait-veil" aria-hidden />
+            <span className="portrait-waterline" aria-hidden />
           </div>
-          {/* Status bar under the photo: the two places people go next. */}
-          <figcaption className="flex items-center justify-between gap-3 border-t border-border/60 bg-secondary/60 px-3 py-2.5 font-mono text-xs">
-            <a
-              href={site.social.scholar}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
-            >
-              <GraduationCap className="size-3.5" aria-hidden />
-              Google Scholar
-              <ArrowUpRight className="size-3" aria-hidden />
-            </a>
-            <Link
-              href="/about"
-              className="group inline-flex items-center gap-1.5 text-primary hover:underline hover:underline-offset-4"
-            >
-              more about me
-              <ArrowRight
-                className="size-3.5 transition-transform duration-300 group-hover:translate-x-1"
-                aria-hidden
-              />
-            </Link>
-          </figcaption>
         </figure>
 
         <div>
@@ -220,30 +206,70 @@ export function TerminalHero() {
           </p>
 
           <div
-            className="hero-rise mt-7 flex flex-wrap items-center gap-3"
+            className="hero-rise mt-7"
             style={{ "--d": "0.65s" } as React.CSSProperties}
           >
-            <Button asChild className="rounded-full">
-              <Link href="/projects">View projects</Link>
-            </Button>
-            <Button asChild variant="outline" className="rounded-full">
-              <Link href="/research">Read the research</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="icon"
-              className="size-8 rounded-full"
-            >
-              <a
-                href={site.social.github}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+                <a href={site.social.github} target="_blank" rel="noreferrer">
+                  <GitHubIcon className="size-4" />
+                  GitHub
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+                <a href={site.social.scholar} target="_blank" rel="noreferrer">
+                  <GraduationCap className="size-4" />
+                  Google Scholar
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+                <Link href="/projects">
+                  <FolderOpen className="size-4" />
+                  Projects
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+                <a href={site.social.linkedin} target="_blank" rel="noreferrer">
+                  <LinkedInIcon className="size-4" />
+                  LinkedIn
+                </a>
+              </Button>
+              <Button
+                size="lg"
+                className="col-span-2 rounded-full px-3 text-[13px]"
+                aria-expanded={contactOpen}
+                aria-controls="hero-contact"
+                onClick={() => setContactOpen((open) => !open)}
               >
-                <GitHubIcon className="size-4" />
-              </a>
-            </Button>
+                <Mail className="size-4" />
+                Contact
+                <ChevronDown
+                  className={cn("size-3.5 transition-transform duration-300", contactOpen && "rotate-180")}
+                />
+              </Button>
+            </div>
+
+            {/* Opens in place, under the buttons — no popover to position or
+                clip on a phone. Height animates through grid rows 0fr → 1fr. */}
+            <div
+              id="hero-contact"
+              className="contact-drawer"
+              data-open={contactOpen ? "" : undefined}
+              inert={!contactOpen}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-wrap gap-2.5 pt-3">
+                  <a href={`mailto:${site.email}`} className="contact-chip">
+                    <Mail className="size-4 text-primary" aria-hidden />
+                    {site.email}
+                  </a>
+                  <a href={site.whatsapp} target="_blank" rel="noreferrer" className="contact-chip">
+                    <WhatsAppIcon className="size-4 text-primary" />
+                    WhatsApp {site.phone}
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div

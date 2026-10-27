@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ArrowUpRight, GraduationCap, Mail, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GitHubIcon } from "@/components/shared/icons";
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/shared/icons";
 import { CvDialog } from "@/components/shared/cv-dialog";
 import { Timeline } from "@/components/about/timeline";
 import { Reveal } from "@/components/motion/reveal";
@@ -164,6 +164,12 @@ export default function AboutPage() {
                 <Mail className="size-4 shrink-0 text-primary" />
                 {site.email}
               </p>
+              <p className="flex items-center gap-2 text-muted-foreground">
+                <WhatsAppIcon className="size-4 shrink-0 text-primary" />
+                <a href={site.whatsapp} target="_blank" rel="noreferrer" className="hover:text-primary">
+                  {site.phone}
+                </a>
+              </p>
             </div>
             <div className="mx-auto mt-5 flex max-w-[260px] flex-col gap-2.5">
               <Button asChild className="rounded-full">
@@ -177,6 +183,12 @@ export default function AboutPage() {
                 <a href={site.social.github} target="_blank" rel="noreferrer">
                   <GitHubIcon className="size-4" />
                   GitHub
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full">
+                <a href={site.social.linkedin} target="_blank" rel="noreferrer">
+                  <LinkedInIcon className="size-4" />
+                  LinkedIn
                 </a>
               </Button>
               <Button asChild variant="outline" className="rounded-full">

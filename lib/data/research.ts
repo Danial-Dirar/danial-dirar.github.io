@@ -29,8 +29,11 @@ export type ResearchPaper = {
   abstract: string;
   /** Short human-facing topic tags. */
   topics: string[];
-  /** A few pulled-out result highlights (optional). */
-  highlights?: { value: string; label: string }[];
+  /**
+   * Results as a before → after diff: "-" lines are the baseline, "+" lines
+   * what the work found or achieved. Every figure is from the paper.
+   */
+  changes?: { sign: "-" | "+"; value: string; label: string }[];
 };
 
 const A = (name: string, self = false): ResearchAuthor => ({ name, self });
@@ -55,10 +58,12 @@ export const research: ResearchPaper[] = [
     volume: "Vol. 16",
     doi: "10.1007/s13201-025-02665-1",
     topics: ["Managed aquifer recharge", "Hydrology", "GIS", "Bangladesh"],
-    highlights: [
-      { value: "3,315", label: "feasible MAR sites identified" },
-      { value: "27.1M m³", label: "recharge potential / year" },
-      { value: "10,000×", label: "infiltration rate improvement" },
+    changes: [
+      { sign: "-", value: "2–3 mm/day", label: "natural recharge through the clay aquitard" },
+      { sign: "+", value: "10,000×", label: "faster infiltration through the treatment units" },
+      { sign: "-", value: "50.61 Mm³", label: "surface runoff a year" },
+      { sign: "+", value: "27.10 Mm³", label: "of it rechargeable a year (53.5%)" },
+      { sign: "+", value: "3,315", label: "feasible MAR sites across the three areas" },
     ],
     abstract:
       "The water-stressed Barind Tract (BT) in northwest Bangladesh faces critical challenges in meeting irrigation and domestic water demands, with groundwater tables declining at rates of 0.09–0.39 m per year due to over-extraction and limited natural recharge through thick clay aquitards (21–39 m). This study evaluates the potential for managed aquifer recharge (MAR) across three districts of BT (Godagari, Niamatpur and Mohanpur) using integrated horizontal flow treatment units. We analyzed 376.68 km of re-excavated Kharies (natural canals) and 257.01 acres of Beels (water reservoirs), incorporating seventeen years (2005–2021) of groundwater monitoring data and nineteen years of rainfall analysis (2002–2020). Field-verified recharge rates of 29 L/min for Kharies and 162.7 L/min for Beels were used to calculate potential MAR installations using the rational formula. Our analysis identified 3,315 feasible MAR installation sites, capable of recharging 27.10 million m³ annually from 50.61 million m³ of surface runoff, achieving 53.5% utilization efficiency. The integrated treatment units overcame natural recharge limitations of 2–3 mm/day through thick clay aquitards, achieving a 10,000-fold improvement in infiltration rates. This assessment provides a scalable and replicable methodology for sustainable groundwater management strategies in water-stressed regions globally, with phased implementation offering a pathway to reverse groundwater depletion trends.",
@@ -81,10 +86,11 @@ export const research: ResearchPaper[] = [
     volume: "Vol. 15",
     doi: "10.1007/s13201-025-02588-x",
     topics: ["Managed aquifer recharge", "Water treatment", "Field study"],
-    highlights: [
-      { value: "97%", label: "turbidity reduction (68 → 2 NTU)" },
-      { value: "2.01 m", label: "water-table rise over 7 years" },
-      { value: "96%", label: "recharge rate recovered via backwash" },
+    changes: [
+      { sign: "-", value: "68 NTU", label: "turbidity of the incoming water" },
+      { sign: "+", value: "2 NTU", label: "after the horizontal-flow unit (−97%)" },
+      { sign: "+", value: "2.01 m", label: "water-table rise, 2015–2021" },
+      { sign: "+", value: "96%", label: "of the recharge rate restored by backwashing" },
     ],
     abstract:
       "The Barind tract in northwest Bangladesh faces severe groundwater challenges due to excessive extraction and limited recharge capacity, primarily caused by its thick top clay layer and intensive agricultural water demand. This study develops and evaluates an innovative horizontal flow treatment unit integrated with Managed Aquifer Recharge (MAR). The developed system demonstrated exceptional treatment efficiency, achieving 97.06% turbidity reduction (from 68 to 2 NTU), 87.31% removal of total suspended solids, and significant bacterial contamination reduction of 81.82% (TC) and 93.75% (FC), while maintaining all chemical parameters within ECR 2023 drinking water standards. Under controlled conditions, the initial recharge rate achieved 168.06 lpm, while during monsoon flooding, natural condition recharge ranged from 154.11 to 167.38 lpm. The system demonstrated remarkable sustainability, with 96% recovery of the original recharge rate possible through backwashing and maintenance, showing only a minimal annual decline of 3.43 lpm/year. Long-term monitoring revealed a 2.01 m water table rise over seven years (2015–2021). The innovative aspects include a novel horizontal flow design that reduces clogging, integrated pre-treatment for suspended solids, and an efficient self-cleaning mechanism through backwashing. This study demonstrates that the integrated MAR-treatment system provides a sustainable solution for groundwater management in water-stressed regions, addressing both water quantity and quality challenges while ensuring long-term operational viability.",

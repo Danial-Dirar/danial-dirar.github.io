@@ -33,14 +33,24 @@ export function uniqueSlug(base: string, taken: readonly string[]): string {
   return `${base}-${n}`;
 }
 
-/** Auto-excerpt: strip Markdown punctuation, collapse whitespace, clamp. */
-export function deriveExcerpt(body: string): string {
-  return body
+/**
+ * Auto-excerpt: drop Markdown syntax but keep the words — hyphens inside words
+ * survive ("San Francisco-based") — and end on a word boundary.
+ */
+export function deriveExcerpt(body: string, max = 160): string {
+  const text = body
+    .replace(/```[\s\S]*?```/g, "")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/[#>*`_\-]/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}(#{1,6}|>|[-*+]|\d+\.)\s+/gm, "")
+    .replace(/[*_`~]/g, "")
     .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 160);
+    .trim();
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const end = cut.lastIndexOf(" ");
+  const clipped = end > max * 0.6 ? cut.slice(0, end) : text.slice(0, max);
+  return `${clipped.replace(/[\s,;:.—-]+$/, "")}…`;
 }
 
 /** YAML frontmatter with JSON-quoted scalars — valid YAML, safely escaped. */

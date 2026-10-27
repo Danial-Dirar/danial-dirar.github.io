@@ -34,8 +34,9 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-1.5 font-mono text-[13px] transition-colors",
+                "nav-link rounded-md px-3 py-1.5 font-mono text-[13px] transition-colors",
                 isActive(item.href)
                   ? "bg-accent text-accent-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -69,6 +70,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-md px-3 py-2.5 font-mono text-sm",

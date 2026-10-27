@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   // Expose the base path to client code that builds asset URLs by hand.
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  // React <ViewTransition>: project covers morph from card to case study.
+  experimental: { viewTransition: true },
   turbopack: {
     // A stray lockfile exists in the home directory; pin the workspace root.
     root: __dirname,

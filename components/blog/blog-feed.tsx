@@ -1,38 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { PostCard } from "@/components/shared/post-card";
 import { Reveal } from "@/components/motion/reveal";
 import type { PostMeta } from "@/lib/posts";
 
+type FeedProps = { posts: PostMeta[]; tags: string[] };
+
+const tagHref = (tag: string | null) =>
+  tag ? `/blog?tag=${encodeURIComponent(tag)}` : "/blog";
+
 /**
- * Client-side tag filtering. Kept on the client (rather than reading
- * `searchParams` on the server) so the /blog page stays fully static and can
- * be exported for GitHub Pages.
+ * Tag filtering lives in the URL (`/blog?tag=…`), so a tag clicked on a post
+ * page lands here already filtered and a filtered view can be shared. Read on
+ * the client so the /blog page stays fully static for GitHub Pages.
  */
-export function BlogFeed({ posts, tags }: { posts: PostMeta[]; tags: string[] }) {
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+export function BlogFeed(props: FeedProps) {
+  const activeTag = useSearchParams().get("tag");
+  return <BlogFeedView {...props} activeTag={activeTag} />;
+}
+
+/** The feed for a given tag. Also the static fallback, before params are read. */
+export function BlogFeedView({ posts, tags, activeTag }: FeedProps & { activeTag: string | null }) {
   const visible = posts.filter((p) => !activeTag || p.tags.includes(activeTag));
 
   return (
     <>
       {tags.length > 0 && (
         <Reveal delay={0.1}>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <button type="button" onClick={() => setActiveTag(null)}>
+          <nav aria-label="Filter posts by tag" className="mt-6 flex flex-wrap gap-2">
+            <Link href={tagHref(null)} replace scroll={false} aria-current={!activeTag ? "page" : undefined}>
               <Badge
                 variant={activeTag ? "outline" : "default"}
                 className="cursor-pointer font-mono text-[11px]"
               >
                 all
               </Badge>
-            </button>
+            </Link>
             {tags.map((t) => (
-              <button
+              <Link
                 key={t}
-                type="button"
-                onClick={() => setActiveTag((cur) => (cur === t ? null : t))}
+                href={tagHref(activeTag === t ? null : t)}
+                replace
+                scroll={false}
+                aria-current={activeTag === t ? "page" : undefined}
               >
                 <Badge
                   variant={activeTag === t ? "default" : "outline"}
@@ -40,9 +53,9 @@ export function BlogFeed({ posts, tags }: { posts: PostMeta[]; tags: string[] })
                 >
                   #{t}
                 </Badge>
-              </button>
+              </Link>
             ))}
-          </div>
+          </nav>
         </Reveal>
       )}
 

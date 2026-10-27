@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { ProjectCard } from "@/components/shared/project-card";
+import { ProjectGrid } from "@/components/projects/project-grid";
 import { Reveal } from "@/components/motion/reveal";
 import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Machine learning, generative AI, and software projects by Md. Danial Dirar.",
+    "Machine learning, groundwater research, local AI and software projects by Md. Danial Dirar.",
 };
 
 export default function ProjectsPage() {
@@ -21,18 +21,12 @@ export default function ProjectsPage() {
         </Reveal>
         <Reveal delay={0.05}>
           <p className="mt-5 max-w-xl text-muted-foreground">
-            ML models, local-AI systems, and the software around them — most with
-            source on GitHub.
+            ML models, groundwater research, local-AI systems and the software around
+            them — client sites included, most with source on GitHub.
           </p>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2">
-          {projects.map((project, i) => (
-            <Reveal key={project.slug} delay={Math.min(i, 5) * 0.05}>
-              <ProjectCard project={project} />
-            </Reveal>
-          ))}
-        </div>
+        <ProjectGrid projects={projects} />
       </div>
     </section>
   );

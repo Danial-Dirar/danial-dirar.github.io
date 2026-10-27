@@ -3,6 +3,8 @@ import { Geist, JetBrains_Mono } from "next/font/google";
 import { themeInitScript } from "@/components/theme/theme-script";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { DepthGauge } from "@/components/layout/depth-gauge";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -51,9 +53,12 @@ export default function RootLayout({
       {/* suppressHydrationWarning: browser extensions inject attributes on
           <body> before React hydrates. */}
       <body suppressHydrationWarning className="flex min-h-full flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <MotionProvider>
+          <Navbar />
+          <DepthGauge />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

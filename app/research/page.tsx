@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PaperCard } from "@/components/research/paper-card";
 import { Reveal } from "@/components/motion/reveal";
+import { FieldMap } from "@/components/water/field-map";
 import { research } from "@/lib/data/research";
 
 export const metadata: Metadata = {
@@ -29,6 +30,11 @@ export default function ResearchPage() {
             research. Click any paper to read its abstract.
           </p>
         </Reveal>
+
+        <div className="mt-10 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
+          <h2 className="font-mono text-sm text-muted-foreground">{"// where the field work is"}</h2>
+          <FieldMap className="mt-5" />
+        </div>
 
         <div className="mt-10 space-y-8">
           {ongoing.length > 0 && (

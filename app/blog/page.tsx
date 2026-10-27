@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Reveal } from "@/components/motion/reveal";
-import { BlogFeed } from "@/components/blog/blog-feed";
+import { BlogFeed, BlogFeedView } from "@/components/blog/blog-feed";
 import { getAllPosts, getAllTags, type PostMeta } from "@/lib/blog";
 
 export const metadata: Metadata = {
@@ -38,7 +39,11 @@ export default function BlogPage() {
           </p>
         </Reveal>
 
-        <BlogFeed posts={posts} tags={tags} />
+        {/* Search params are only known in the browser: the static HTML
+            carries the unfiltered feed, then the client applies ?tag=. */}
+        <Suspense fallback={<BlogFeedView posts={posts} tags={tags} activeTag={null} />}>
+          <BlogFeed posts={posts} tags={tags} />
+        </Suspense>
       </div>
     </section>
   );

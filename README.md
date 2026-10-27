@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# danial-dirar.github.io
 
-## Getting Started
+Portfolio, research and blog of **Md. Danial Dirar** — ML and software engineer,
+and groundwater researcher working on Bangladesh's Barind Tract.
 
-First, run the development server:
+Live at **https://danial-dirar.github.io**.
+
+## Stack
+
+- Next.js 16 (App Router), static export (`output: "export"`) to GitHub Pages
+- Tailwind CSS v4, shadcn/ui, Framer Motion, React `<ViewTransition>`
+- Blog: MDX files in `content/blog/`, rendered with `next-mdx-remote` and Shiki
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev -- --webpack   # see handout notes: Turbopack dev can't fetch fonts on some machines
+npm run build              # static site in out/
+npm run studio             # local blog composer at http://127.0.0.1:4321
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Pushing to `main` builds and deploys through `.github/workflows/deploy.yml`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | What |
+| --- | --- |
+| `lib/site.ts` | Name, email, socials, navigation |
+| `lib/data/projects.ts` | Every project — copy, stack, links, cover image |
+| `lib/data/research.ts`, `publications.ts` | Papers and ongoing research |
+| `lib/data/experience.ts` | Work and education timeline (mirrors the CV) |
+| `lib/data/field-map.ts` | Bangladesh outline, rivers, Barind Tract, field sites (generated from Natural Earth) |
+| `lib/data/contours.ts` | Hero contour lines (generated) |
+| `public/work/<slug>/cover.webp` | Project covers, 1600×1000 |
+| `content/blog/*.mdx` | Blog posts; images in `public/blog/<slug>/` |
+| `app/admin` | Browser-only composer for posting from any device |
 
-## Learn More
+## Adding a project
 
-To learn more about Next.js, take a look at the following resources:
+Add an entry to `lib/data/projects.ts` and a 1600×1000 `cover.webp` under
+`public/work/<slug>/`. A blur placeholder can be made with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+magick public/work/<slug>/cover.webp -resize 20x -quality 40 webp:- | base64 -w0
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Prefix the output with `data:image/webp;base64,`. Set `water: true` for water
+and climate work so the card carries the droplet marker and appears under the
+water filter.

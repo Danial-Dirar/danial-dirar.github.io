@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,6 +15,8 @@ const CV_PAGES = [
   { src: asset("/cv/page-2.webp"), width: 1700, height: 2200 },
 ] as const;
 
+const noopSubscribe = () => () => {};
+
 /**
  * "View CV" button + animated overlay viewer.
  * Preview pages are pre-rendered webp (crisp everywhere, incl. mobile where
@@ -22,11 +24,9 @@ const CV_PAGES = [
  */
 export function CvDialog() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // Portal target only exists client-side: false in the server snapshot.
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const printFrame = useRef<HTMLIFrameElement | null>(null);
-
-  // Portal target only exists client-side.
-  useEffect(() => setMounted(true), []);
 
   // Print the actual PDF through a hidden same-origin iframe; fall back to
   // opening it in a new tab (whose viewer has its own print button).

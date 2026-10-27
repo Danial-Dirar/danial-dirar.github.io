@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GitHubIcon } from "@/components/shared/icons";
 import { CvDialog } from "@/components/shared/cv-dialog";
+import { Timeline } from "@/components/about/timeline";
 import { Reveal } from "@/components/motion/reveal";
+import { achievements, education, experience } from "@/lib/data/experience";
 import { founderPhoto } from "@/lib/data/founder";
 import { asset } from "@/lib/asset";
 import { doiUrl, publications } from "@/lib/data/publications";
@@ -20,6 +22,7 @@ export const metadata: Metadata = {
 const skills = [
   "Machine learning & deep learning",
   "Time-series forecasting & research",
+  "Hydrology & GIS (ArcGIS, QGIS)",
   "RAG & local LLM systems",
   "Generative image & video pipelines",
   "Full-stack web (Next.js / NestJS)",
@@ -70,8 +73,30 @@ export default function AboutPage() {
               </div>
             </Reveal>
 
+            <section className="mt-12">
+              <h2 className="font-mono text-lg font-semibold">
+                <span className="text-primary">$ </span>cat experience.log
+              </h2>
+              <Timeline entries={experience} />
+            </section>
+
+            <section className="mt-12">
+              <h2 className="font-mono text-lg font-semibold">
+                <span className="text-primary">$ </span>cat education.log
+              </h2>
+              <Timeline entries={education} />
+              <ul className="mt-6 space-y-1.5 text-sm text-muted-foreground">
+                {achievements.map((a) => (
+                  <li key={a.title}>
+                    <span className="font-medium text-foreground">{a.title}</span>
+                    <span className="font-mono text-xs"> ({a.when})</span>. {a.detail}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
             <Reveal delay={0.2}>
-              <h2 className="mt-10 font-mono text-lg font-semibold">
+              <h2 className="mt-12 font-mono text-lg font-semibold">
                 <span className="text-primary">$ </span>cat publications.bib
               </h2>
               <div className="mt-5 space-y-4">
@@ -158,6 +183,13 @@ export default function AboutPage() {
                 <a href={site.social.scholar} target="_blank" rel="noreferrer">
                   <GraduationCap className="size-4" />
                   Google Scholar
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full">
+                <a href={site.social.orcid} target="_blank" rel="noreferrer">
+                  <span className="font-mono text-[11px] font-bold">iD</span>
+                  ORCID
                   <ArrowUpRight className="size-4" />
                 </a>
               </Button>

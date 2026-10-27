@@ -41,6 +41,26 @@ async function uniqueSlug(base) {
   return slug;
 }
 
+/**
+ * Auto-excerpt — keep in step with deriveExcerpt in lib/admin/post-file.ts.
+ * Drops Markdown syntax, keeps hyphenated words whole, ends on a word boundary.
+ */
+function deriveExcerpt(body, max = 160) {
+  const text = body
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}(#{1,6}|>|[-*+]|\d+\.)\s+/gm, "")
+    .replace(/[*_`~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const end = cut.lastIndexOf(" ");
+  const clipped = end > max * 0.6 ? cut.slice(0, end) : text.slice(0, max);
+  return `${clipped.replace(/[\s,;:.—-]+$/, "")}…`;
+}
+
 /** Build YAML frontmatter using JSON-quoted scalars (valid YAML, safely escaped). */
 function frontmatter({ title, date, tags, excerpt, cover }) {
   const lines = [
@@ -155,9 +175,7 @@ const server = http.createServer(async (req, res) => {
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean);
-      const excerpt =
-        (data.excerpt || "").trim() ||
-        body.replace(/[#>*`_\-]/g, "").replace(/\s+/g, " ").trim().slice(0, 160);
+      const excerpt = (data.excerpt || "").trim() || deriveExcerpt(body);
       const date = new Date().toISOString().slice(0, 10);
       const slug = await uniqueSlug(slugify(title));
       const cover = (data.cover || "").trim();

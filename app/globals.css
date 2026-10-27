@@ -776,6 +776,33 @@
   }
 }
 
+/* ── Blog feed: posts clamp with "See more" ───────────────── */
+.feed-body.is-clamped,
+.feed-body[style*="max-height"] {
+  overflow: hidden;
+  transition: max-height 0.45s var(--ease-out-expo);
+}
+.feed-body.is-clamped::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 4.5rem;
+  background: linear-gradient(to bottom, transparent, var(--card));
+  pointer-events: none;
+}
+.prose-feed > :first-child {
+  margin-top: 0.6rem;
+}
+.prose-feed > :last-child {
+  margin-bottom: 0.25rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feed-body {
+    transition: none !important;
+  }
+}
+
 /* ── Water budget: terminal progress cells ─────────────────── */
 .wb-bar {
   display: inline-grid;

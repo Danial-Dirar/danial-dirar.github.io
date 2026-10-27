@@ -2,7 +2,15 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { BlogFeed, BlogFeedView } from "@/components/blog/blog-feed";
-import { getAllPosts, getAllTags, type PostMeta } from "@/lib/blog";
+import { FeedPost } from "@/components/blog/feed-post";
+import { PostBody } from "@/components/mdx/post-body";
+import {
+  getAllPosts,
+  getAllTags,
+  postMeta,
+  readingMinutes,
+  splitLeadMedia,
+} from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -12,16 +20,20 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const tags = getAllTags();
-  // Strip MDX bodies — the feed only needs metadata, and this keeps the
-  // client payload small.
-  const posts: PostMeta[] = getAllPosts().map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    date: p.date,
-    tags: p.tags,
-    excerpt: p.excerpt,
-    cover: p.cover,
-  }));
+  const all = getAllPosts();
+  // The client only needs metadata to filter; bodies are rendered here, on
+  // the server, and passed in as children.
+  const posts = all.map(postMeta);
+
+  // The whole feed, rendered once: each post in full, social-post style.
+  const feed = all.map((post) => {
+    const { media, body } = splitLeadMedia(post);
+    return (
+      <FeedPost key={post.slug} post={postMeta(post)} minutes={readingMinutes(post)} media={media}>
+        <PostBody source={body} />
+      </FeedPost>
+    );
+  });
 
   return (
     <section className="relative pt-28 pb-20 md:pt-36">
@@ -41,8 +53,16 @@ export default function BlogPage() {
 
         {/* Search params are only known in the browser: the static HTML
             carries the unfiltered feed, then the client applies ?tag=. */}
-        <Suspense fallback={<BlogFeedView posts={posts} tags={tags} activeTag={null} />}>
-          <BlogFeed posts={posts} tags={tags} />
+        <Suspense
+          fallback={
+            <BlogFeedView posts={posts} tags={tags} activeTag={null}>
+              {feed}
+            </BlogFeedView>
+          }
+        >
+          <BlogFeed posts={posts} tags={tags}>
+            {feed}
+          </BlogFeed>
         </Suspense>
       </div>
     </section>

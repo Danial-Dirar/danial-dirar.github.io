@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { PostCard } from "@/components/shared/post-card";
 import { Reveal } from "@/components/motion/reveal";
+import { ActiveTagContext } from "@/components/blog/feed-post";
 import type { PostMeta } from "@/lib/posts";
 
-type FeedProps = { posts: PostMeta[]; tags: string[] };
+type FeedProps = { posts: PostMeta[]; tags: string[]; children: React.ReactNode };
 
 const tagHref = (tag: string | null) =>
   tag ? `/blog?tag=${encodeURIComponent(tag)}` : "/blog";
@@ -22,12 +22,21 @@ export function BlogFeed(props: FeedProps) {
   return <BlogFeedView {...props} activeTag={activeTag} />;
 }
 
-/** The feed for a given tag. Also the static fallback, before params are read. */
-export function BlogFeedView({ posts, tags, activeTag }: FeedProps & { activeTag: string | null }) {
-  const visible = posts.filter((p) => !activeTag || p.tags.includes(activeTag));
+/**
+ * The feed for a given tag. Also the static fallback, before params are read.
+ * The posts arrive as server-rendered children; each one hides itself when it
+ * doesn't carry the active tag.
+ */
+export function BlogFeedView({
+  posts,
+  tags,
+  activeTag,
+  children,
+}: FeedProps & { activeTag: string | null }) {
+  const visible = posts.filter((p) => !activeTag || p.tags.includes(activeTag)).length;
 
   return (
-    <>
+    <ActiveTagContext.Provider value={activeTag}>
       {tags.length > 0 && (
         <Reveal delay={0.1}>
           <nav aria-label="Filter posts by tag" className="mt-6 flex flex-wrap gap-2">
@@ -59,18 +68,14 @@ export function BlogFeedView({ posts, tags, activeTag }: FeedProps & { activeTag
         </Reveal>
       )}
 
-      <div className="mt-8 grid gap-4">
-        {visible.map((post, i) => (
-          <Reveal key={post.slug} delay={Math.min(i, 5) * 0.05}>
-            <PostCard post={post} />
-          </Reveal>
-        ))}
-        {visible.length === 0 && (
+      <div className="mt-8 grid max-w-2xl gap-5">
+        {children}
+        {visible === 0 && (
           <p className="font-mono text-sm text-muted-foreground">
             — no posts{activeTag ? ` tagged #${activeTag}` : ""} yet —
           </p>
         )}
       </div>
-    </>
+    </ActiveTagContext.Provider>
   );
 }

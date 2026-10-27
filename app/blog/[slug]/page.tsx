@@ -3,11 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import remarkGfm from "remark-gfm";
-import rehypePrettyCode from "rehype-pretty-code";
 import { Badge } from "@/components/ui/badge";
-import { MdxImage } from "@/components/mdx/mdx-image";
+import { PostBody } from "@/components/mdx/post-body";
 import { formatDate, getAllPosts, getPost } from "@/lib/blog";
 import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
@@ -30,12 +27,6 @@ export async function generateMetadata({
     openGraph: post.cover ? { images: [post.cover] } : undefined,
   };
 }
-
-// The site is dark only, so code blocks use a single dark theme.
-const prettyCodeOptions = {
-  theme: "github-dark-default",
-  keepBackground: false,
-};
 
 export default async function BlogPostPage({
   params,
@@ -90,16 +81,7 @@ export default async function BlogPostPage({
         )}
 
         <div className="prose-blog mt-8">
-          <MDXRemote
-            source={post.content}
-            components={{ img: MdxImage }}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkGfm],
-                rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
-              },
-            }}
-          />
+          <PostBody source={post.content} />
         </div>
       </div>
     </article>

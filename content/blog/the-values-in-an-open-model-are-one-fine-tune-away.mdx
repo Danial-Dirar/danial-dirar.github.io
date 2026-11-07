@@ -1,0 +1,32 @@
+---
+title: "The Values in an Open Model Are One Fine-Tune Away"
+date: "2026-11-07"
+tags: ["hermes", "ai", "local ai"]
+excerpt: "On November 6, Nous Research released Arete-27B, a version of Alibaba's Qwen3.8-27B post-trained to stop giving Chinese state-aligned answers on politically…"
+---
+
+On November 6, Nous Research released Arete-27B, a version of Alibaba's Qwen3.8-27B post-trained to stop giving Chinese state-aligned answers on politically sensitive topics. The weights, eval and training data are all public.
+
+What they did
+
+Nous built an 803-prompt eval across seven categories, including freedom of expression, democracy and surveillance. An LLM judge (Grok 4.7) scored each answer on how many verified facts it stated and whether it adopted the Chinese state's framing as its own.
+
+The training recipe was surprisingly plain: no RL, no architecture changes, just supervised fine-tuning on about 52.8M tokens of answers from Inkling, an open teacher model. Against the scale of pretraining, that is almost nothing.
+
+The results
+
+Answers with propaganda fell from 22% to under 1%, level with Western models like Mistral and Gemma. The fact score rose from 2.32 to 2.98 out of 5. Freedom of expression saw the biggest change, with propaganda dropping from 60% to 1%. General capability held steady, scoring 65.60% against the base model's 65.77% on Nous's Hermes Bench.
+
+My take
+
+The lesson is bigger than one model. The political layer was thin, and 50 million tokens removed it without touching anything underneath. That means the values in any open model are one fine-tune away, in either direction. Arete itself is a model trained toward values Nous chose.
+
+A few caveats are worth keeping in mind. Nous built the eval it is scored on, the judge is another LLM, and "Western values" is a contested label for what is mostly a test of factual recall. Independent replication will matter more than the headline.
+
+The good news is that none of it requires trust. You can run the eval yourself.
+
+Weights: https://huggingface.co/NousResearch/Arete-27B
+Eval: https://huggingface.co/datasets/NousResearch/Propaganda_Eval
+Write-up: https://nousresearch.com/arete
+
+![](/blog/the-values-in-an-open-model-are-one-fine-tune-away/img-5371.webp)

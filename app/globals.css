@@ -52,7 +52,8 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-:root {
+:root,
+:root[data-theme="light"] .terminal-window {
   /* The site is dark only — there is no light theme. `.dark` stays on
      <html> because shadcn's `dark:` variant keys off it.
      Amber phosphor on near-black coffee: still a terminal, but the warm
@@ -93,6 +94,38 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
   --radius: 0.625rem;
+}
+
+:root[data-theme="light"] {
+  /* Light preview (dev only, ?theme=light): warm paper and burnt amber.
+     Terminals keep the dark tokens above, as dark screens on the page. */
+  --background: oklch(0.975 0.008 85);
+  --foreground: oklch(0.23 0.02 60);
+  --card: oklch(0.99 0.005 85);
+  --card-foreground: oklch(0.23 0.02 60);
+  --popover: oklch(0.99 0.005 85);
+  --popover-foreground: oklch(0.23 0.02 60);
+  --primary: oklch(0.55 0.14 58);
+  --primary-foreground: oklch(0.985 0.005 85);
+  --secondary: oklch(0.935 0.014 80);
+  --secondary-foreground: oklch(0.23 0.02 60);
+  --muted: oklch(0.935 0.014 80);
+  --muted-foreground: oklch(0.47 0.025 65);
+  --accent: oklch(0.92 0.035 78);
+  --accent-foreground: oklch(0.4 0.1 60);
+  --border: oklch(0.35 0.04 60 / 16%);
+  --input: oklch(0.35 0.04 60 / 20%);
+  --ring: oklch(0.55 0.14 58 / 55%);
+  --brand-1: oklch(0.55 0.14 58);
+  --brand-2: oklch(0.55 0.16 38);
+  --aquifer: oklch(0.52 0.11 235);
+  --clay: oklch(0.55 0.12 50);
+}
+:root[data-theme="light"] .terminal-window {
+  /* Solid, not the dark theme's frosted 80%: over paper that turns muddy. */
+  color: var(--foreground);
+  background-color: var(--card);
+  box-shadow: 0 22px 44px -26px rgb(40 25 10 / 45%);
 }
 
 @layer base {

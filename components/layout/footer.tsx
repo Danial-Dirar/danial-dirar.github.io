@@ -29,7 +29,7 @@ export function Footer() {
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-foreground max-sm:-m-2 max-sm:p-2"
           >
             <GitHubIcon className="size-4" />
           </a>
@@ -38,7 +38,7 @@ export function Footer() {
             target="_blank"
             rel="noreferrer"
             aria-label="Google Scholar"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-foreground max-sm:-m-2 max-sm:p-2"
           >
             <GraduationCap className="size-4" />
           </a>
@@ -47,7 +47,7 @@ export function Footer() {
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-foreground max-sm:-m-2 max-sm:p-2"
           >
             <LinkedInIcon className="size-4" />
           </a>
@@ -56,14 +56,14 @@ export function Footer() {
             target="_blank"
             rel="noreferrer"
             aria-label="WhatsApp"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-foreground max-sm:-m-2 max-sm:p-2"
           >
             <WhatsAppIcon className="size-4" />
           </a>
           <a
             href={`mailto:${site.email}`}
             aria-label="Email"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-foreground max-sm:-m-2 max-sm:p-2"
           >
             <Mail className="size-4" />
           </a>

@@ -133,7 +133,7 @@ export default function AboutPage() {
                     key={pub.doi}
                     className="rounded-xl border border-border/60 bg-card/60 p-5 transition-colors hover:border-primary/40"
                   >
-                    <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start justify-between gap-3 max-sm:flex-col-reverse max-sm:gap-2.5">
                       <p className="font-mono text-xs text-muted-foreground">
                         {pub.venue} · {pub.year} · {pub.type}
                       </p>
@@ -175,7 +175,7 @@ export default function AboutPage() {
           </div>
 
           {/* Portrait + facts */}
-          <Reveal delay={0.1} className="md:sticky md:top-24">
+          <Reveal delay={0.1} className="max-md:order-first md:sticky md:top-24">
             <div className="relative mx-auto w-full max-w-[260px]">
               <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-brand-1/10 blur-2xl" />
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl ring-1 ring-border/60">

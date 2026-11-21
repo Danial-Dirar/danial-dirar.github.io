@@ -76,7 +76,7 @@ export default function ResearchPage() {
                 <span className="terminal-dot bg-emerald-400/80" />
                 <span className="ml-2 font-mono text-xs text-muted-foreground">ComfyUI, my workspace</span>
                 <span className="ml-auto font-mono text-[11px] text-muted-foreground group-hover:text-primary">
-                  open full size ↗
+                  <span className="max-sm:hidden">open full size </span>↗
                 </span>
               </span>
               <span className="relative block flex-1">

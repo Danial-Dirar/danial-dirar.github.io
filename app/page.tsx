@@ -125,7 +125,7 @@ export default function HomePage() {
                     ComfyUI, my workspace
                   </span>
                   <span className="ml-auto font-mono text-[11px] text-muted-foreground group-hover:text-primary">
-                    open full size ↗
+                    <span className="max-sm:hidden">open full size </span>↗
                   </span>
                 </span>
                 <Image

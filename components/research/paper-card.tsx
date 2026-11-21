@@ -13,7 +13,7 @@ export function PaperCard({ paper }: { paper: ResearchPaper }) {
     <article className="overflow-hidden rounded-xl border border-border/60 bg-card/60 transition-colors hover:border-primary/40">
       <div className="p-5 md:p-6">
         {/* status + venue line, publisher on the right */}
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3 max-sm:flex-col-reverse max-sm:gap-2.5">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
             <span
               className={cn(

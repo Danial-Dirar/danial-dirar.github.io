@@ -16,7 +16,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About Md. Danial Dirar — ML engineer working on machine learning, generative AI, and local AI for business.",
+    "About Md. Danial Dirar — ML/AI & software engineer working on machine learning, generative AI, and local AI for business.",
 };
 
 const skills = [

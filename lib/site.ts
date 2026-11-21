@@ -2,7 +2,7 @@ export const site = {
   name: "Danial Dirar",
   fullName: "Md. Danial Dirar",
   handle: "danial",
-  role: "ML & Software Engineer",
+  role: "ML/AI & Software Engineer",
   tagline: "Machine Learning · Generative AI · Local AI for business",
   description:
     "Portfolio and blog of Md. Danial Dirar — a computer-science engineer working on machine learning, generative AI, and local AI tailored for businesses.",

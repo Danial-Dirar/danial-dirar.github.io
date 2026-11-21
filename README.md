@@ -1,6 +1,6 @@
 # danial-dirar.github.io
 
-Portfolio, research and blog of **Md. Danial Dirar** — ML and software engineer,
+Portfolio, research and blog of **Md. Danial Dirar** — ML/AI & software engineer,
 and groundwater researcher working on Bangladesh's Barind Tract.
 
 Live at **https://danial-dirar.github.io**.

@@ -213,7 +213,7 @@ export default function AboutPage() {
             </div>
             <div className="mx-auto mt-5 flex max-w-[260px] flex-col gap-2.5">
               <CvDialog />
-              {/* Outlined in green; a sheen glances across it on hover. */}
+              {/* Outlined in the accent; a sheen glances across it on hover. */}
               <Button
                 asChild
                 variant="outline"
@@ -224,26 +224,26 @@ export default function AboutPage() {
                   Get in touch
                 </a>
               </Button>
-              <Button asChild variant="outline" className="rounded-full">
+              <Button asChild variant="outline" data-brand="github" className="btn-glance btn-brand rounded-full">
                 <a href={site.social.github} target="_blank" rel="noreferrer">
                   <GitHubIcon className="size-4" />
                   GitHub
                 </a>
               </Button>
-              <Button asChild variant="outline" className="rounded-full">
+              <Button asChild variant="outline" data-brand="linkedin" className="btn-glance btn-brand rounded-full">
                 <a href={site.social.linkedin} target="_blank" rel="noreferrer">
                   <LinkedInIcon className="size-4" />
                   LinkedIn
                 </a>
               </Button>
-              <Button asChild variant="outline" className="rounded-full">
+              <Button asChild variant="outline" data-brand="scholar" className="btn-glance btn-brand rounded-full">
                 <a href={site.social.scholar} target="_blank" rel="noreferrer">
                   <GraduationCap className="size-4" />
                   Google Scholar
                   <ArrowUpRight className="size-4" />
                 </a>
               </Button>
-              <Button asChild variant="outline" className="rounded-full">
+              <Button asChild variant="outline" data-brand="orcid" className="btn-glance btn-brand rounded-full">
                 <a href={site.social.orcid} target="_blank" rel="noreferrer">
                   <span className="font-mono text-[11px] font-bold">iD</span>
                   ORCID

@@ -210,13 +210,13 @@ export function TerminalHero() {
             style={{ "--d": "0.65s" } as React.CSSProperties}
           >
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
-              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+              <Button asChild size="lg" variant="outline" data-brand="github" className="btn-glance btn-brand rounded-full px-3 text-[13px]">
                 <a href={site.social.github} target="_blank" rel="noreferrer">
                   <GitHubIcon className="size-4" />
                   GitHub
                 </a>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+              <Button asChild size="lg" variant="outline" data-brand="scholar" className="btn-glance btn-brand rounded-full px-3 text-[13px]">
                 <a href={site.social.scholar} target="_blank" rel="noreferrer">
                   <GraduationCap className="size-4" />
                   Google Scholar
@@ -228,7 +228,7 @@ export function TerminalHero() {
                   Projects
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-3 text-[13px]">
+              <Button asChild size="lg" variant="outline" data-brand="linkedin" className="btn-glance btn-brand rounded-full px-3 text-[13px]">
                 <a href={site.social.linkedin} target="_blank" rel="noreferrer">
                   <LinkedInIcon className="size-4" />
                   LinkedIn

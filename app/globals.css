@@ -54,27 +54,29 @@
 
 :root {
   /* The site is dark only — there is no light theme. `.dark` stays on
-     <html> because shadcn's `dark:` variant keys off it. */
-  --background: oklch(0.16 0.012 165);
-  --foreground: oklch(0.93 0.01 160);
-  --card: oklch(0.2 0.014 165);
-  --card-foreground: oklch(0.93 0.01 160);
-  --popover: oklch(0.2 0.014 165);
-  --popover-foreground: oklch(0.93 0.01 160);
-  --primary: oklch(0.87 0.19 162);
-  --primary-foreground: oklch(0.16 0.012 165);
-  --secondary: oklch(0.25 0.015 165);
-  --secondary-foreground: oklch(0.93 0.01 160);
-  --muted: oklch(0.25 0.015 165);
-  --muted-foreground: oklch(0.68 0.02 160);
-  --accent: oklch(0.27 0.03 163);
-  --accent-foreground: oklch(0.9 0.1 162);
+     <html> because shadcn's `dark:` variant keys off it.
+     Amber phosphor on near-black coffee: still a terminal, but the warm
+     kind, in key with the brick and lamplight of the portrait. */
+  --background: oklch(0.155 0.01 65);
+  --foreground: oklch(0.93 0.02 85);
+  --card: oklch(0.195 0.012 65);
+  --card-foreground: oklch(0.93 0.02 85);
+  --popover: oklch(0.195 0.012 65);
+  --popover-foreground: oklch(0.93 0.02 85);
+  --primary: oklch(0.83 0.145 75);
+  --primary-foreground: oklch(0.155 0.01 65);
+  --secondary: oklch(0.245 0.014 65);
+  --secondary-foreground: oklch(0.93 0.02 85);
+  --muted: oklch(0.245 0.014 65);
+  --muted-foreground: oklch(0.7 0.025 80);
+  --accent: oklch(0.27 0.03 72);
+  --accent-foreground: oklch(0.9 0.09 78);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.87 0.19 162 / 12%);
-  --input: oklch(0.87 0.19 162 / 15%);
-  --ring: oklch(0.87 0.19 162 / 60%);
-  --brand-1: oklch(0.87 0.19 162);
-  --brand-2: oklch(0.82 0.14 75);
+  --border: oklch(0.83 0.145 75 / 12%);
+  --input: oklch(0.83 0.145 75 / 15%);
+  --ring: oklch(0.83 0.145 75 / 60%);
+  --brand-1: oklch(0.83 0.145 75);
+  --brand-2: oklch(0.72 0.14 40);
   --aquifer: oklch(0.79 0.11 225);
   --clay: oklch(0.68 0.11 52);
   --chart-1: oklch(0.87 0 0);
@@ -92,105 +94,6 @@
   --sidebar-ring: oklch(0.556 0 0);
   --radius: 0.625rem;
 }
-
-/* ── Palette candidates (exploration) ─────────────────────────
-   Previewed on the dev server with ?palette=clay|amber|indigo|sage
-   (?palette=green goes back). Only tokens change; every component reads
-   them. Once one is chosen it moves into :root and the rest go. */
-:root[data-palette="clay"] {
-  /* Barind clay: the tract's red laterite soil and the brick wall behind
-     the portrait; groundwater blue as the second voice. */
-  --background: oklch(0.165 0.016 45);
-  --foreground: oklch(0.93 0.014 70);
-  --card: oklch(0.205 0.02 45);
-  --card-foreground: oklch(0.93 0.014 70);
-  --popover: oklch(0.205 0.02 45);
-  --popover-foreground: oklch(0.93 0.014 70);
-  --primary: oklch(0.75 0.145 50);
-  --primary-foreground: oklch(0.165 0.016 45);
-  --secondary: oklch(0.255 0.022 45);
-  --secondary-foreground: oklch(0.93 0.014 70);
-  --muted: oklch(0.255 0.022 45);
-  --muted-foreground: oklch(0.71 0.025 60);
-  --accent: oklch(0.28 0.04 48);
-  --accent-foreground: oklch(0.88 0.08 55);
-  --border: oklch(0.75 0.145 50 / 13%);
-  --input: oklch(0.75 0.145 50 / 16%);
-  --ring: oklch(0.75 0.145 50 / 60%);
-  --brand-1: oklch(0.75 0.145 50);
-  --brand-2: oklch(0.79 0.1 225);
-  --clay: oklch(0.82 0.13 80);
-}
-:root[data-palette="amber"] {
-  /* Amber phosphor: still a terminal, but the warm kind, on near-black
-     coffee. Closest to the lamps in the photo. */
-  --background: oklch(0.155 0.01 65);
-  --foreground: oklch(0.93 0.02 85);
-  --card: oklch(0.195 0.012 65);
-  --card-foreground: oklch(0.93 0.02 85);
-  --popover: oklch(0.195 0.012 65);
-  --popover-foreground: oklch(0.93 0.02 85);
-  --primary: oklch(0.83 0.145 75);
-  --primary-foreground: oklch(0.155 0.01 65);
-  --secondary: oklch(0.245 0.014 65);
-  --secondary-foreground: oklch(0.93 0.02 85);
-  --muted: oklch(0.245 0.014 65);
-  --muted-foreground: oklch(0.7 0.025 80);
-  --accent: oklch(0.27 0.03 72);
-  --accent-foreground: oklch(0.9 0.09 78);
-  --border: oklch(0.83 0.145 75 / 12%);
-  --input: oklch(0.83 0.145 75 / 15%);
-  --ring: oklch(0.83 0.145 75 / 60%);
-  --brand-1: oklch(0.83 0.145 75);
-  --brand-2: oklch(0.72 0.14 40);
-}
-:root[data-palette="indigo"] {
-  /* Wave-print indigo: the painting behind the portrait. Deep indigo
-     ground, the vermilion sun as the accent, cream text. */
-  --background: oklch(0.17 0.03 262);
-  --foreground: oklch(0.94 0.014 85);
-  --card: oklch(0.21 0.034 262);
-  --card-foreground: oklch(0.94 0.014 85);
-  --popover: oklch(0.21 0.034 262);
-  --popover-foreground: oklch(0.94 0.014 85);
-  --primary: oklch(0.72 0.165 35);
-  --primary-foreground: oklch(0.17 0.03 262);
-  --secondary: oklch(0.26 0.036 262);
-  --secondary-foreground: oklch(0.94 0.014 85);
-  --muted: oklch(0.26 0.036 262);
-  --muted-foreground: oklch(0.73 0.03 250);
-  --accent: oklch(0.29 0.05 262);
-  --accent-foreground: oklch(0.88 0.08 40);
-  --border: oklch(0.8 0.06 240 / 14%);
-  --input: oklch(0.8 0.06 240 / 16%);
-  --ring: oklch(0.72 0.165 35 / 60%);
-  --brand-1: oklch(0.72 0.165 35);
-  --brand-2: oklch(0.83 0.08 230);
-}
-:root[data-palette="sage"] {
-  /* Espresso and sage: the brown ground asked for, keeping a softer green
-     so the site still reads as itself. */
-  --background: oklch(0.165 0.012 55);
-  --foreground: oklch(0.93 0.012 85);
-  --card: oklch(0.205 0.014 55);
-  --card-foreground: oklch(0.93 0.012 85);
-  --popover: oklch(0.205 0.014 55);
-  --popover-foreground: oklch(0.93 0.012 85);
-  --primary: oklch(0.8 0.11 150);
-  --primary-foreground: oklch(0.165 0.012 55);
-  --secondary: oklch(0.25 0.016 55);
-  --secondary-foreground: oklch(0.93 0.012 85);
-  --muted: oklch(0.25 0.016 55);
-  --muted-foreground: oklch(0.7 0.02 70);
-  --accent: oklch(0.27 0.025 90);
-  --accent-foreground: oklch(0.88 0.07 150);
-  --border: oklch(0.85 0.04 80 / 11%);
-  --input: oklch(0.85 0.04 80 / 14%);
-  --ring: oklch(0.8 0.11 150 / 60%);
-  --brand-1: oklch(0.8 0.11 150);
-  --brand-2: oklch(0.8 0.12 70);
-}
-
 
 @layer base {
   * {
@@ -967,7 +870,7 @@
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklch, var(--foreground) 20%, transparent) transparent;
   /* ComfyUI's dotted canvas. */
-  background-color: oklch(0.15 0.008 165);
+  background-color: oklch(0.15 0.008 65);
   background-image: radial-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
   background-size: 14px 14px;
 }
@@ -1027,9 +930,9 @@
 .pg-node {
   position: absolute;
   display: block;
-  border: 1px solid oklch(0.35 0.01 165);
+  border: 1px solid oklch(0.35 0.01 65);
   border-radius: 8px;
-  background: oklch(0.22 0.008 165);
+  background: oklch(0.22 0.008 65);
   box-shadow: 0 10px 26px -14px rgb(0 0 0 / 0.85);
   text-align: left;
   font-family: var(--font-mono);
@@ -1064,9 +967,9 @@
   align-items: center;
   gap: 8px;
   overflow: hidden;
-  border-bottom: 1px solid oklch(0.32 0.01 165);
+  border-bottom: 1px solid oklch(0.32 0.01 65);
   border-radius: 8px 8px 0 0;
-  background: oklch(0.27 0.01 165);
+  background: oklch(0.27 0.01 65);
   padding: 0 10px;
   font-weight: 600;
 }
@@ -1119,7 +1022,7 @@
   justify-content: space-between;
   gap: 12px;
   border-radius: 6px;
-  background: oklch(0.17 0.008 165);
+  background: oklch(0.17 0.008 65);
   padding: 1px 8px;
   font-size: 12px;
 }
@@ -1148,7 +1051,7 @@
   margin-top: 8px;
   overflow: hidden;
   border-radius: 6px;
-  background: oklch(0.17 0.008 165);
+  background: oklch(0.17 0.008 65);
   padding: 6px 8px;
   color: var(--muted-foreground);
   font-size: 12px;
@@ -1164,7 +1067,7 @@
   overflow: hidden;
   border-radius: 6px;
   background:
-    conic-gradient(oklch(0.2 0.008 165) 25%, oklch(0.17 0.008 165) 0 50%, oklch(0.2 0.008 165) 0 75%, oklch(0.17 0.008 165) 0) 0 0 / 16px 16px;
+    conic-gradient(oklch(0.2 0.008 65) 25%, oklch(0.17 0.008 65) 0 50%, oklch(0.2 0.008 65) 0 75%, oklch(0.17 0.008 65) 0) 0 0 / 16px 16px;
 }
 .pg-preview-img {
   width: 100%;
@@ -1197,7 +1100,7 @@
   overflow: hidden;
   border: 1px solid color-mix(in oklch, var(--foreground) 18%, transparent);
   border-radius: 6px;
-  background: oklch(0.13 0.008 165 / 85%);
+  background: oklch(0.13 0.008 65 / 85%);
   backdrop-filter: blur(4px);
   cursor: pointer;
 }
@@ -1230,7 +1133,7 @@
   left: 186px;
   bottom: 10px;
   border-radius: 6px;
-  background: oklch(0.13 0.008 165 / 85%);
+  background: oklch(0.13 0.008 65 / 85%);
   padding: 2px 8px;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1537,6 +1440,7 @@
 }
 
 /* ── A button that catches the light on hover ──────────────── */
+/* The sheen takes the theme accent, or a button's own --glance colour. */
 .btn-glance {
   position: relative;
   isolation: isolate;
@@ -1551,9 +1455,9 @@
   background: linear-gradient(
     100deg,
     transparent 0%,
-    color-mix(in oklab, var(--primary) 28%, transparent) 42%,
+    color-mix(in oklab, var(--glance, var(--primary)) 28%, transparent) 42%,
     color-mix(in oklab, white 30%, transparent) 50%,
-    color-mix(in oklab, var(--primary) 28%, transparent) 58%,
+    color-mix(in oklab, var(--glance, var(--primary)) 28%, transparent) 58%,
     transparent 100%
   );
   transform: translateX(-130%) skewX(-14deg);
@@ -1571,5 +1475,50 @@
   }
   to {
     transform: translateX(300%) skewX(-14deg);
+  }
+}
+
+/* ── Profile buttons wear their site's colours on hover ───────
+   GitHub goes black, LinkedIn and Scholar their own blues, ORCID its
+   green, and a white glance (.btn-glance) crosses each. Unlayered, so it
+   wins over the outline variant's hover classes. */
+.btn-brand:hover,
+.btn-brand:focus-visible {
+  background-color: var(--brand-bg);
+  color: var(--brand-fg);
+  border-color: var(--brand-edge, var(--brand-bg));
+  box-shadow: 0 10px 22px -12px var(--brand-glow, var(--brand-bg));
+}
+.btn-brand[data-brand="github"] {
+  --brand-bg: #0d1117;
+  --brand-fg: #ffffff;
+  --brand-edge: rgb(240 246 252 / 0.4);
+  --brand-glow: rgb(0 0 0 / 0.9);
+  --glance: white;
+}
+.btn-brand[data-brand="linkedin"] {
+  --brand-bg: #0a66c2;
+  --brand-fg: #ffffff;
+  --glance: white;
+}
+.btn-brand[data-brand="scholar"] {
+  --brand-bg: #1a73e8;
+  --brand-fg: #ffffff;
+  --glance: white;
+}
+.btn-brand[data-brand="orcid"] {
+  /* ORCID's green is too light for white text, so the label goes dark. */
+  --brand-bg: #a6ce39;
+  --brand-fg: #17200a;
+  --glance: white;
+}
+
+/* ── Every button lifts a little under the pointer ─────────── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-slot="button"]:not(:disabled):hover {
+    translate: 0 -2px;
+  }
+  [data-slot="button"]:not(:disabled):active {
+    translate: 0 0;
   }
 }

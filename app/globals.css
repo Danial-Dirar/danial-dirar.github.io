@@ -111,8 +111,11 @@
 }
 
 @layer utilities {
+  /* The one frame every page, the navbar and the footer share, so left
+     edges line up from page to page. Pages fill it; reading text inside
+     keeps its own measure. */
   .container-page {
-    @apply mx-auto w-full max-w-5xl px-5 md:px-8;
+    @apply mx-auto w-full max-w-[90rem] px-5 md:px-8;
   }
 
   /* Faint terminal grid backdrop */
@@ -838,17 +841,6 @@
 }
 
 /* ── Local-AI pipeline: a ComfyUI-style canvas ──────────────── */
-.container-wide {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 1600px;
-  padding-inline: 1.25rem;
-}
-@media (min-width: 768px) {
-  .container-wide {
-    padding-inline: 2rem;
-  }
-}
 .pipeline-graph {
   /* ComfyUI's own socket colours. */
   --wire-model: oklch(0.74 0.12 300);

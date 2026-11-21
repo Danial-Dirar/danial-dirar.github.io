@@ -36,7 +36,7 @@ export default function ResearchPage() {
 
       {/* The two benches, side by side and wider than the text column: the
           field sites on the left, the local-AI canvas (detailed) on the right. */}
-      <div className="container-wide mt-10 grid items-start gap-6 2xl:grid-cols-[400px_minmax(0,1fr)]">
+      <div className="container-page mt-10 grid items-start gap-6 2xl:grid-cols-[400px_minmax(0,1fr)]">
           <div className="min-w-0 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
             <h2 className="font-mono text-sm text-muted-foreground">{"// where the field work is"}</h2>
             <FieldMap className="mt-5" />
@@ -55,7 +55,7 @@ export default function ResearchPage() {
       </div>
 
       <div className="container-page">
-        <div className="mx-auto mt-12 max-w-3xl space-y-8">
+        <div className="mt-14 space-y-10">
           {ongoing.length > 0 && (
             <div>
               <Reveal>
@@ -63,7 +63,7 @@ export default function ResearchPage() {
                   {"// in progress"}
                 </h2>
               </Reveal>
-              <div className="space-y-5">
+              <div className="grid items-start gap-5 lg:grid-cols-2">
                 {ongoing.map((paper, i) => (
                   <Reveal key={paper.id} delay={i * 0.06}>
                     <PaperCard paper={paper} />
@@ -79,7 +79,7 @@ export default function ResearchPage() {
                 {"// published — peer reviewed"}
               </h2>
             </Reveal>
-            <div className="space-y-5">
+            <div className="grid items-start gap-5 lg:grid-cols-2">
               {published.map((paper, i) => (
                 <Reveal key={paper.id} delay={i * 0.06}>
                   <PaperCard paper={paper} />

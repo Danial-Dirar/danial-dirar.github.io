@@ -45,7 +45,7 @@ export default async function ProjectPage({
   return (
     <article className="relative pt-28 pb-20 md:pt-36">
       <div className="absolute inset-0 -z-10 bg-grid mask-fade" />
-      <div className="container-page max-w-4xl">
+      <div className="container-page">
         <Link
           href="/projects"
           className="inline-flex items-center gap-1.5 font-mono text-[13px] text-muted-foreground transition-colors hover:text-primary"
@@ -97,7 +97,9 @@ export default async function ProjectPage({
           )}
         </header>
 
-        <figure className="mt-10">
+        <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] xl:gap-14">
+          <div className="min-w-0">
+        <figure>
           <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border/60">
             <ViewTransition name={coverTransitionName(project.slug)} share="morph">
               <Image
@@ -129,27 +131,7 @@ export default async function ProjectPage({
 
         {/* Metrics as a spec sheet — key, dotted leader, value — the way a
             tool like nvidia-smi prints them, not as tiles of big numbers. */}
-        {project.highlights && (
-          <div className="mt-10 rounded-xl border border-border/60 bg-card/40 px-4 py-4 font-mono text-[13px] md:px-5">
-            <p className="text-muted-foreground">
-              <span className="text-primary">$ </span>cat metrics.txt
-            </p>
-            <dl className="mt-3 space-y-1.5">
-              {project.highlights.map((h) => (
-                <div key={h.label} className="flex items-baseline gap-2">
-                  <dt className="min-w-0 text-muted-foreground">{h.label}</dt>
-                  <span
-                    className="min-w-6 flex-1 translate-y-[-0.2em] border-b border-dotted border-border"
-                    aria-hidden
-                  />
-                  <dd className="shrink-0 font-semibold text-primary tabular-nums">{h.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        )}
-
-        <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem]">
+          <div className="mt-10">
           <div>
             <h2 className="font-mono text-lg font-semibold">
               <span className="text-primary">$ </span>less about.txt
@@ -162,29 +144,7 @@ export default async function ProjectPage({
             )}
           </div>
 
-          <aside className="space-y-6">
-            <div>
-              <h2 className="font-mono text-[13px] text-muted-foreground">stack</h2>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {project.stack.map((tech) => (
-                  <Badge key={tech} variant="secondary" className="font-mono text-[11px]">
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h2 className="font-mono text-[13px] text-muted-foreground">tags</h2>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {project.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="font-mono text-[11px]">
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
+          </div>
 
         {project.diagram && (
           <figure className="mt-12">
@@ -234,6 +194,52 @@ export default async function ProjectPage({
             </ul>
           </section>
         )}
+
+          </div>
+          {/* Facts on the right, sticky, so the story can run long beside them. */}
+          <aside className="space-y-6 lg:sticky lg:top-24">
+        {project.highlights && (
+          <div className="rounded-xl border border-border/60 bg-card/40 px-4 py-4 font-mono text-[13px] md:px-5">
+            <p className="text-muted-foreground">
+              <span className="text-primary">$ </span>cat metrics.txt
+            </p>
+            <dl className="mt-3 space-y-1.5">
+              {project.highlights.map((h) => (
+                <div key={h.label} className="flex items-baseline gap-2">
+                  <dt className="min-w-0 text-muted-foreground">{h.label}</dt>
+                  <span
+                    className="min-w-6 flex-1 translate-y-[-0.2em] border-b border-dotted border-border"
+                    aria-hidden
+                  />
+                  <dd className="shrink-0 font-semibold text-primary tabular-nums">{h.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+
+            <div>
+              <h2 className="font-mono text-[13px] text-muted-foreground">stack</h2>
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {project.stack.map((tech) => (
+                  <Badge key={tech} variant="secondary" className="font-mono text-[11px]">
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="font-mono text-[13px] text-muted-foreground">tags</h2>
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {project.tags.map((tag) => (
+                  <Badge key={tag} variant="outline" className="font-mono text-[11px]">
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
 
         <nav
           aria-label="More projects"

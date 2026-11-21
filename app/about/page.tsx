@@ -33,9 +33,11 @@ export default function AboutPage() {
   return (
     <section className="relative pt-28 pb-20 md:pt-36">
       <div className="absolute inset-0 -z-10 bg-grid mask-fade" />
-      <div className="container-page max-w-4xl">
-        <div className="grid gap-10 md:grid-cols-[1fr_260px] md:items-start">
-          <div>
+      <div className="container-page">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_260px] md:items-start xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-14">
+          {/* On wide screens the story flows into two columns (bio, skills and
+              publications beside the timeline) so lines stay a readable length. */}
+          <div className="xl:columns-2 xl:gap-12 [&>*]:break-inside-avoid">
             <Reveal>
               <h1 className="font-mono text-2xl font-semibold tracking-tight md:text-3xl">
                 <span className="text-primary">$ </span>cat about.md

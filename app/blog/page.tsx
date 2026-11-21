@@ -4,6 +4,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { BlogFeed, BlogFeedView } from "@/components/blog/blog-feed";
 import { FeedPost } from "@/components/blog/feed-post";
 import { PostBody } from "@/components/mdx/post-body";
+import { AuthorCard, SideList } from "@/components/blog/author-card";
+import { featuredProjects } from "@/lib/data/projects";
 import {
   getAllPosts,
   getAllTags,
@@ -35,17 +37,24 @@ export default function BlogPage() {
     );
   });
 
+  const projectsRail = (
+    <SideList
+      title="ls projects/ --featured"
+      items={featuredProjects.slice(0, 5).map((p) => ({ href: `/projects/${p.slug}`, label: p.title, meta: p.year }))}
+    />
+  );
+
   return (
     <section className="relative pt-28 pb-20 md:pt-36">
       <div className="absolute inset-0 -z-10 bg-grid mask-fade" />
-      <div className="container-page max-w-3xl">
+      <div className="container-page">
         <Reveal>
           <h1 className="font-mono text-2xl font-semibold tracking-tight md:text-3xl">
             <span className="text-primary">$ </span>cat blog.log
           </h1>
         </Reveal>
         <Reveal delay={0.05}>
-          <p className="mt-5 text-muted-foreground">
+          <p className="mt-5 max-w-2xl text-muted-foreground">
             Notes on ML, generative AI, and local AI for business — with the
             occasional build log.
           </p>
@@ -55,12 +64,12 @@ export default function BlogPage() {
             carries the unfiltered feed, then the client applies ?tag=. */}
         <Suspense
           fallback={
-            <BlogFeedView posts={posts} tags={tags} activeTag={null}>
+            <BlogFeedView posts={posts} tags={tags} activeTag={null} left={<AuthorCard />} right={projectsRail}>
               {feed}
             </BlogFeedView>
           }
         >
-          <BlogFeed posts={posts} tags={tags}>
+          <BlogFeed posts={posts} tags={tags} left={<AuthorCard />} right={projectsRail}>
             {feed}
           </BlogFeed>
         </Suspense>

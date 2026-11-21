@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { TerminalHero } from "@/components/home/terminal-hero";
@@ -9,6 +10,7 @@ import { PipelineGraph } from "@/components/ai/pipeline-graph";
 import { WaterBudget, type BudgetRow } from "@/components/water/water-budget";
 import { featuredProjects } from "@/lib/data/projects";
 import { getAllPosts } from "@/lib/blog";
+import { asset } from "@/lib/asset";
 
 /**
  * The Barind water budget, from Hossain et al. (2026, 2025) in Applied Water
@@ -60,7 +62,7 @@ export default function HomePage() {
       {/* Two benches side by side: the water research on the left, the
           local-AI work on the right. Stacked on phones. */}
       <section className="border-y border-border/40 bg-card/30 py-16 md:py-20">
-        <div className="container-wide grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:gap-10">
+        <div className="container-page grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:gap-10">
           <div className="min-w-0">
             <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" />
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
@@ -88,6 +90,39 @@ export default function HomePage() {
             <div className="mt-8">
               <PipelineGraph />
             </div>
+
+            {/* The real thing behind the sketch above. */}
+            <figure className="mt-8">
+              <a
+                href={asset("/ai/comfyui-workspace.webp")}
+                target="_blank"
+                rel="noreferrer"
+                className="group block overflow-hidden rounded-xl border border-border/60 bg-card/60 transition-colors hover:border-primary/40"
+              >
+                <span className="terminal-titlebar">
+                  <span className="terminal-dot bg-red-400/80" />
+                  <span className="terminal-dot bg-amber-400/80" />
+                  <span className="terminal-dot bg-emerald-400/80" />
+                  <span className="ml-2 font-mono text-xs text-muted-foreground">
+                    ComfyUI, my workspace
+                  </span>
+                  <span className="ml-auto font-mono text-[11px] text-muted-foreground group-hover:text-primary">
+                    open full size ↗
+                  </span>
+                </span>
+                <Image
+                  src={asset("/ai/comfyui-workspace.webp")}
+                  alt="A ComfyUI workspace with a video-generation workflow: loader, LoRA, sampling and decode groups wired together, with a minimap in the corner"
+                  width={1600}
+                  height={875}
+                  sizes="(min-width: 1536px) 936px, 100vw"
+                  className="h-auto w-full"
+                />
+              </a>
+              <figcaption className="mt-2 font-mono text-[11px] text-muted-foreground">
+                The sketch above, for real: a video workflow in my own ComfyUI.
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -113,7 +148,7 @@ export default function HomePage() {
             <Reveal>
               <SectionHeader command="tail -n 3 blog.log" href="/blog" linkLabel="all posts" />
             </Reveal>
-            <div className="mt-8 grid gap-4">
+            <div className="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
               {posts.map((post, i) => (
                 <Reveal key={post.slug} delay={i * 0.06}>
                   <PostCard post={post} />

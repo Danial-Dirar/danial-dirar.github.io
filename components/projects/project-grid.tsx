@@ -60,7 +60,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         Showing {visible.length} {visible.length === 1 ? "project" : "projects"}
       </p>
 
-      <motion.ul layout className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.ul layout className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((project, i) => (
             <motion.li

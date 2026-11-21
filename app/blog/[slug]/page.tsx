@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PostBody } from "@/components/mdx/post-body";
+import { AuthorCard, SideList } from "@/components/blog/author-card";
 import { formatDate, getAllPosts, getPost } from "@/lib/blog";
 import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
@@ -40,7 +41,12 @@ export default async function BlogPostPage({
   return (
     <article className="relative pt-28 pb-20 md:pt-36">
       <div className="absolute inset-0 -z-10 bg-grid mask-fade" />
-      <div className="container-page max-w-3xl">
+      <div className="container-page">
+        <div className="grid items-start gap-8 lg:grid-cols-[15rem_minmax(0,1fr)] xl:grid-cols-[16rem_minmax(0,46rem)_17rem] xl:justify-between">
+          <aside className="hidden lg:sticky lg:top-24 lg:block">
+            <AuthorCard />
+          </aside>
+          <div className="min-w-0">
         <Link
           href="/blog"
           className="inline-flex items-center gap-1.5 font-mono text-[13px] text-muted-foreground transition-colors hover:text-primary"
@@ -82,6 +88,17 @@ export default async function BlogPostPage({
 
         <div className="prose-blog mt-8">
           <PostBody source={post.content} />
+        </div>
+          </div>
+          <aside className="hidden xl:sticky xl:top-24 xl:block">
+            <SideList
+              title="tail blog.log"
+              items={getAllPosts()
+                .filter((p) => p.slug !== post.slug)
+                .slice(0, 5)
+                .map((p) => ({ href: `/blog/${p.slug}`, label: p.title, meta: formatDate(p.date) }))}
+            />
+          </aside>
         </div>
       </div>
     </article>

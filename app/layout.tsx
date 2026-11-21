@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -36,6 +37,7 @@ export default function RootLayout({
     // variant keys off it) and no script ever removes it.
     // data-scroll-behavior: Next skips the CSS smooth scroll on route changes.
     <html
+      suppressHydrationWarning
       lang="en"
       data-scroll-behavior="smooth"
       className={`dark ${geistSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
@@ -44,6 +46,13 @@ export default function RootLayout({
       {/* suppressHydrationWarning: browser extensions inject attributes on
           <body> before React hydrates. */}
       <body suppressHydrationWarning className="flex min-h-full flex-col">
+        {/* Palette exploration, dev server only: ?palette=clay sets it for
+            the tab (sessionStorage), ?palette=green clears it. */}
+        {process.env.NODE_ENV === "development" && (
+          <Script id="palette-preview" strategy="beforeInteractive">
+            {`try{var q=new URLSearchParams(location.search).get("palette");if(q)sessionStorage.setItem("palette",q==="green"?"":q);var p=sessionStorage.getItem("palette");if(p)document.documentElement.dataset.palette=p}catch(e){}`}
+          </Script>
+        )}
         <MotionProvider>
           <Navbar />
           <DepthGauge />

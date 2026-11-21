@@ -154,7 +154,7 @@ export function TerminalHero() {
             behind a rising water line, then the words, then the terminal types.
             Only transform and opacity animate, so it stays smooth while the
             page is still loading and hydrating. */}
-        <figure className="hero-portrait terminal-window order-first mx-auto w-full max-w-sm lg:order-last lg:max-w-none">
+        <figure className="hero-portrait terminal-window order-first mx-auto w-full max-w-sm lg:order-last lg:max-w-none lg:self-end">
           <div className="terminal-titlebar">
             <span className="terminal-dot bg-red-400/80" />
             <span className="terminal-dot bg-amber-400/80" />

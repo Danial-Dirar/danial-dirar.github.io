@@ -93,6 +93,104 @@
   --radius: 0.625rem;
 }
 
+/* ── Palette candidates (exploration) ─────────────────────────
+   Previewed on the dev server with ?palette=clay|amber|indigo|sage
+   (?palette=green goes back). Only tokens change; every component reads
+   them. Once one is chosen it moves into :root and the rest go. */
+:root[data-palette="clay"] {
+  /* Barind clay: the tract's red laterite soil and the brick wall behind
+     the portrait; groundwater blue as the second voice. */
+  --background: oklch(0.165 0.016 45);
+  --foreground: oklch(0.93 0.014 70);
+  --card: oklch(0.205 0.02 45);
+  --card-foreground: oklch(0.93 0.014 70);
+  --popover: oklch(0.205 0.02 45);
+  --popover-foreground: oklch(0.93 0.014 70);
+  --primary: oklch(0.75 0.145 50);
+  --primary-foreground: oklch(0.165 0.016 45);
+  --secondary: oklch(0.255 0.022 45);
+  --secondary-foreground: oklch(0.93 0.014 70);
+  --muted: oklch(0.255 0.022 45);
+  --muted-foreground: oklch(0.71 0.025 60);
+  --accent: oklch(0.28 0.04 48);
+  --accent-foreground: oklch(0.88 0.08 55);
+  --border: oklch(0.75 0.145 50 / 13%);
+  --input: oklch(0.75 0.145 50 / 16%);
+  --ring: oklch(0.75 0.145 50 / 60%);
+  --brand-1: oklch(0.75 0.145 50);
+  --brand-2: oklch(0.79 0.1 225);
+  --clay: oklch(0.82 0.13 80);
+}
+:root[data-palette="amber"] {
+  /* Amber phosphor: still a terminal, but the warm kind, on near-black
+     coffee. Closest to the lamps in the photo. */
+  --background: oklch(0.155 0.01 65);
+  --foreground: oklch(0.93 0.02 85);
+  --card: oklch(0.195 0.012 65);
+  --card-foreground: oklch(0.93 0.02 85);
+  --popover: oklch(0.195 0.012 65);
+  --popover-foreground: oklch(0.93 0.02 85);
+  --primary: oklch(0.83 0.145 75);
+  --primary-foreground: oklch(0.155 0.01 65);
+  --secondary: oklch(0.245 0.014 65);
+  --secondary-foreground: oklch(0.93 0.02 85);
+  --muted: oklch(0.245 0.014 65);
+  --muted-foreground: oklch(0.7 0.025 80);
+  --accent: oklch(0.27 0.03 72);
+  --accent-foreground: oklch(0.9 0.09 78);
+  --border: oklch(0.83 0.145 75 / 12%);
+  --input: oklch(0.83 0.145 75 / 15%);
+  --ring: oklch(0.83 0.145 75 / 60%);
+  --brand-1: oklch(0.83 0.145 75);
+  --brand-2: oklch(0.72 0.14 40);
+}
+:root[data-palette="indigo"] {
+  /* Wave-print indigo: the painting behind the portrait. Deep indigo
+     ground, the vermilion sun as the accent, cream text. */
+  --background: oklch(0.17 0.03 262);
+  --foreground: oklch(0.94 0.014 85);
+  --card: oklch(0.21 0.034 262);
+  --card-foreground: oklch(0.94 0.014 85);
+  --popover: oklch(0.21 0.034 262);
+  --popover-foreground: oklch(0.94 0.014 85);
+  --primary: oklch(0.72 0.165 35);
+  --primary-foreground: oklch(0.17 0.03 262);
+  --secondary: oklch(0.26 0.036 262);
+  --secondary-foreground: oklch(0.94 0.014 85);
+  --muted: oklch(0.26 0.036 262);
+  --muted-foreground: oklch(0.73 0.03 250);
+  --accent: oklch(0.29 0.05 262);
+  --accent-foreground: oklch(0.88 0.08 40);
+  --border: oklch(0.8 0.06 240 / 14%);
+  --input: oklch(0.8 0.06 240 / 16%);
+  --ring: oklch(0.72 0.165 35 / 60%);
+  --brand-1: oklch(0.72 0.165 35);
+  --brand-2: oklch(0.83 0.08 230);
+}
+:root[data-palette="sage"] {
+  /* Espresso and sage: the brown ground asked for, keeping a softer green
+     so the site still reads as itself. */
+  --background: oklch(0.165 0.012 55);
+  --foreground: oklch(0.93 0.012 85);
+  --card: oklch(0.205 0.014 55);
+  --card-foreground: oklch(0.93 0.012 85);
+  --popover: oklch(0.205 0.014 55);
+  --popover-foreground: oklch(0.93 0.012 85);
+  --primary: oklch(0.8 0.11 150);
+  --primary-foreground: oklch(0.165 0.012 55);
+  --secondary: oklch(0.25 0.016 55);
+  --secondary-foreground: oklch(0.93 0.012 85);
+  --muted: oklch(0.25 0.016 55);
+  --muted-foreground: oklch(0.7 0.02 70);
+  --accent: oklch(0.27 0.025 90);
+  --accent-foreground: oklch(0.88 0.07 150);
+  --border: oklch(0.85 0.04 80 / 11%);
+  --input: oklch(0.85 0.04 80 / 14%);
+  --ring: oklch(0.8 0.11 150 / 60%);
+  --brand-1: oklch(0.8 0.11 150);
+  --brand-2: oklch(0.8 0.12 70);
+}
+
 
 @layer base {
   * {
@@ -106,7 +204,7 @@
     scroll-behavior: smooth;
   }
   ::selection {
-    background: oklch(0.87 0.19 162 / 25%);
+    background: color-mix(in oklab, var(--primary) 25%, transparent);
   }
 }
 
@@ -131,8 +229,8 @@
   /* Faint terminal grid backdrop */
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(0.87 0.19 162 / 5%) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0.87 0.19 162 / 5%) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in oklab, var(--primary) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--primary) 5%, transparent) 1px, transparent 1px);
     background-size: 44px 44px;
   }
   .mask-fade {
@@ -148,8 +246,8 @@
 .terminal-window {
   @apply overflow-hidden rounded-xl border border-border bg-card/80 shadow-2xl backdrop-blur;
   box-shadow:
-    0 0 0 1px oklch(0.87 0.19 162 / 8%),
-    0 25px 60px -20px oklch(0.87 0.19 162 / 15%),
+    0 0 0 1px color-mix(in oklab, var(--primary) 8%, transparent),
+    0 25px 60px -20px color-mix(in oklab, var(--primary) 15%, transparent),
     0 20px 40px -24px rgb(0 0 0 / 55%);
 }
 .terminal-titlebar {

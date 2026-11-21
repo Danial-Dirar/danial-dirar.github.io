@@ -82,7 +82,7 @@ export const education: TimelineEntry[] = [
     logo: { src: "/logos/org/brac-university.svg", width: 250, height: 240 },
     when: "Jun 2022 – Oct 2026",
     detail:
-      "Thesis: forecasting groundwater levels in the Barind region of northwest Bangladesh from historical hydrological and environmental data, with PyTorch models that currently reach an R² of about 0.93.",
+      "CGPA 3.06 out of 4.00. Thesis: forecasting groundwater levels in the Barind region of northwest Bangladesh from historical hydrological and environmental data, with PyTorch models that currently reach an R² of about 0.93.",
   },
   {
     title: "Higher Secondary Certificate (HSC)",

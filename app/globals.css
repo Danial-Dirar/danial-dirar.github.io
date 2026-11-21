@@ -117,6 +117,15 @@
   .container-page {
     @apply mx-auto w-full max-w-[90rem] px-5 md:px-8;
   }
+  /* From xl the depth gauge is pinned to the right edge (~4.5rem). Where the
+     window is too narrow for the frame's margins to clear it, the frame pads
+     itself inward (both sides, so it stays centred); on wide windows the
+     margins already do the job and the padding falls back to 2rem. */
+  @media (width >= 80rem) {
+    .container-page {
+      padding-inline: max(2rem, calc(5rem - (100vw - 90rem) / 2));
+    }
+  }
 
   /* Faint terminal grid backdrop */
   .bg-grid {
@@ -1222,5 +1231,89 @@
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+}
+
+/* ── Section links: a lit command chip with a passing sheen ── */
+.cta-chip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.7rem 0.35rem 0.8rem;
+  border: 1px solid color-mix(in oklab, var(--primary) 45%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--primary) 8%, transparent);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 0%, transparent);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s,
+    box-shadow 0.3s;
+}
+.cta-chip:hover,
+.cta-chip:focus-visible {
+  border-color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 14%, transparent);
+  box-shadow: 0 0 22px -4px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+/* The sheen: a narrow band of light crossing the chip. */
+.cta-chip::before {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px 0;
+  width: 45%;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in oklab, var(--primary) 30%, transparent) 45%,
+    color-mix(in oklab, white 35%, transparent) 50%,
+    color-mix(in oklab, var(--primary) 30%, transparent) 55%,
+    transparent 100%
+  );
+  transform: translateX(-120%) skewX(-12deg);
+  pointer-events: none;
+}
+.cta-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.2rem;
+  padding-inline: 0.3rem;
+  border-radius: 0.3rem;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cta-chip::before {
+    animation: cta-sheen 5.5s cubic-bezier(0.45, 0, 0.25, 1) 1.2s infinite;
+  }
+  .cta-chip:hover::before {
+    animation: cta-sheen-once 0.8s cubic-bezier(0.45, 0, 0.25, 1);
+  }
+}
+@keyframes cta-sheen {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  22%,
+  100% {
+    transform: translateX(260%) skewX(-12deg);
+  }
+}
+@keyframes cta-sheen-once {
+  from {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  to {
+    transform: translateX(260%) skewX(-12deg);
   }
 }

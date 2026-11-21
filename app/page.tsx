@@ -8,7 +8,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { FieldMap } from "@/components/water/field-map";
 import { PipelineGraph } from "@/components/ai/pipeline-graph";
 import { WaterBudget, type BudgetRow } from "@/components/water/water-budget";
-import { featuredProjects } from "@/lib/data/projects";
+import { featuredProjects, projects as allProjects } from "@/lib/data/projects";
+import { research } from "@/lib/data/research";
 import { getAllPosts } from "@/lib/blog";
 import { asset } from "@/lib/asset";
 
@@ -29,23 +30,33 @@ function SectionHeader({
   command,
   href,
   linkLabel,
+  count,
 }: {
   command: string;
   href: string;
   linkLabel: string;
+  /** How many items wait behind the link; shown as a small tally. */
+  count?: number;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
       <h2 className="font-mono text-lg font-semibold tracking-tight sm:text-xl md:text-2xl">
         <span className="text-primary">$ </span>
         {command}
       </h2>
-      <Link
-        href={href}
-        className="inline-flex shrink-0 items-center gap-1 font-mono text-[13px] text-muted-foreground transition-colors hover:text-primary"
-      >
-        {linkLabel}
-        <ArrowRight className="size-3.5" />
+      {/* A lit command chip rather than grey small print: a sheen passes over
+          it now and then, and the arrow leans in on hover. */}
+      <Link href={href} className="cta-chip group shrink-0">
+        <span>{linkLabel}</span>
+        {count !== undefined && (
+          <span className="cta-count" aria-label={`${count} in total`}>
+            {count}
+          </span>
+        )}
+        <ArrowRight
+          className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+          aria-hidden
+        />
       </Link>
     </div>
   );
@@ -53,7 +64,8 @@ function SectionHeader({
 
 export default function HomePage() {
   const projects = featuredProjects.slice(0, 6);
-  const posts = getAllPosts().slice(0, 3);
+  const allPosts = getAllPosts();
+  const posts = allPosts.slice(0, 3);
 
   return (
     <>
@@ -64,7 +76,7 @@ export default function HomePage() {
       <section className="border-y border-border/40 bg-card/30 py-16 md:py-20">
         <div className="container-page grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:gap-10">
           <div className="min-w-0">
-            <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" />
+            <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" count={research.length} />
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
               The Barind Tract irrigates almost all of its dry-season rice from groundwater,
               and its water table falls by up to 0.39 m a year. My research asks where that
@@ -131,7 +143,7 @@ export default function HomePage() {
       <section className="py-16 md:py-20">
         <div className="container-page">
           <Reveal>
-            <SectionHeader command="ls projects/ --featured" href="/projects" linkLabel="all projects" />
+            <SectionHeader command="ls projects/ --featured" href="/projects" linkLabel="all projects" count={allProjects.length} />
           </Reveal>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
@@ -146,7 +158,7 @@ export default function HomePage() {
         <section className="pb-20">
           <div className="container-page">
             <Reveal>
-              <SectionHeader command="tail -n 3 blog.log" href="/blog" linkLabel="all posts" />
+              <SectionHeader command="tail -n 3 blog.log" href="/blog" linkLabel="all posts" count={allPosts.length} />
             </Reveal>
             <div className="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
               {posts.map((post, i) => (

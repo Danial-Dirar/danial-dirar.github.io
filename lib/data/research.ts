@@ -30,12 +30,23 @@ const LOGO = {
 /** When the citation counts below were read from Google Scholar. */
 export const CITATIONS_AS_OF = "Nov 2026";
 
-const APPLIED_WATER_SCIENCE = {
+export type Journal = {
+  publisher: string;
+  logo: OrgLogo;
+  quartile: string;
+  quartileNote: string;
+  quartileUrl: string;
+  scimago: { src: string; width: number; height: number };
+};
+
+const APPLIED_WATER_SCIENCE: Journal = {
   publisher: "Springer Nature",
   logo: LOGO.springer,
   quartile: "Q1",
   quartileNote: "SCImago, Water Science and Technology (2022–2025)",
   quartileUrl: "https://www.scimagojr.com/journalsearch.php?q=21101055201&tip=sid",
+  /** The quartile strip from SCImago's own embeddable journal widget. */
+  scimago: { src: "/logos/org/scimago-applied-water-science.png", width: 200, height: 64 },
 };
 
 export type ResearchPaper = {
@@ -61,7 +72,7 @@ export type ResearchPaper = {
   /** Where the work comes from and whose data it uses. */
   logos?: { label: string; items: OrgLogo[] };
   /** Publisher and standing of the journal, for published papers. */
-  journal?: typeof APPLIED_WATER_SCIENCE;
+  journal?: Journal;
   /** Google Scholar citation count (see CITATIONS_AS_OF). */
   citations?: number;
 };

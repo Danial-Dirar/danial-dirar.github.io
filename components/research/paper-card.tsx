@@ -1,30 +1,10 @@
-import Image from "next/image";
-import { ArrowUpRight, Award, FlaskConical, Quote } from "lucide-react";
+import { ArrowUpRight, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GitHubIcon } from "@/components/shared/icons";
+import { LogoTile, PaperBadges } from "@/components/research/paper-badges";
 import { ResultDiff } from "@/components/research/result-diff";
-import { asset } from "@/lib/asset";
-import { CITATIONS_AS_OF, doiUrl, type OrgLogo, type ResearchPaper } from "@/lib/data/research";
-import { site } from "@/lib/site";
+import type { ResearchPaper } from "@/lib/data/research";
 import { cn } from "@/lib/utils";
-
-/** A logo on a light tile: the marks keep their own colours on the dark card. */
-function LogoTile({ logo, className }: { logo: OrgLogo; className?: string }) {
-  return (
-    <span
-      className={cn("flex items-center justify-center rounded-md bg-[oklch(0.975_0.006_95)] p-1.5", className)}
-      title={logo.name}
-    >
-      <Image
-        src={asset(logo.src)}
-        alt={`${logo.name} logo`}
-        width={logo.width}
-        height={logo.height}
-        className="h-auto max-h-full w-auto max-w-full object-contain"
-      />
-    </span>
-  );
-}
 
 export function PaperCard({ paper }: { paper: ResearchPaper }) {
   const ongoing = paper.status === "ongoing";
@@ -69,49 +49,7 @@ export function PaperCard({ paper }: { paper: ResearchPaper }) {
         </p>
 
         {/* Published: the way in, the journal's standing, and who cites it. */}
-        {(paper.doi || paper.journal || paper.citations !== undefined) && (
-          <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-xs">
-            {paper.doi && (
-              <a
-                href={doiUrl(paper.doi)}
-                target="_blank"
-                rel="noreferrer"
-                className="group/doi inline-flex min-h-8 items-center gap-2 rounded-md border border-primary/45 bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:border-primary hover:bg-primary/15"
-              >
-                <span className="font-semibold">read on {paper.journal?.publisher.split(" ")[0] ?? "the journal"}</span>
-                <span className="hidden text-primary/70 sm:inline">doi:{paper.doi}</span>
-                <ArrowUpRight
-                  className="size-3.5 transition-transform group-hover/doi:-translate-y-0.5 group-hover/doi:translate-x-0.5"
-                  aria-hidden
-                />
-              </a>
-            )}
-            {paper.journal?.quartile && (
-              <a
-                href={paper.journal.quartileUrl}
-                target="_blank"
-                rel="noreferrer"
-                title={paper.journal.quartileNote}
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-amber-400/45 bg-amber-400/10 px-2.5 py-1.5 text-amber-300 transition-colors hover:border-amber-300"
-              >
-                <Award className="size-3.5" aria-hidden />
-                {paper.journal.quartile} journal
-              </a>
-            )}
-            {paper.citations !== undefined && (
-              <a
-                href={site.social.scholar}
-                target="_blank"
-                rel="noreferrer"
-                title={`Google Scholar, ${CITATIONS_AS_OF}`}
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-border/70 px-2.5 py-1.5 text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-              >
-                <Quote className="size-3.5 text-primary" aria-hidden />
-                cited {paper.citations}×
-              </a>
-            )}
-          </div>
-        )}
+        <PaperBadges doi={paper.doi} journal={paper.journal} citations={paper.citations} className="mt-4" />
 
         {/* Ongoing: where the work happens and whose data it stands on. */}
         {paper.logos && (

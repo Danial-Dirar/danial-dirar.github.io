@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/shared/icons";
 import { CvDialog } from "@/components/shared/cv-dialog";
 import { Timeline } from "@/components/about/timeline";
+import { LogoTile, PaperBadges } from "@/components/research/paper-badges";
 import { Reveal } from "@/components/motion/reveal";
 import { achievements, education, experience } from "@/lib/data/experience";
 import { founderPhoto } from "@/lib/data/founder";
@@ -35,9 +36,11 @@ export default function AboutPage() {
       <div className="absolute inset-0 -z-10 bg-grid mask-fade" />
       <div className="container-page">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_260px] md:items-start xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-14">
-          {/* On wide screens the story flows into two columns (bio, skills and
-              publications beside the timeline) so lines stay a readable length. */}
-          <div className="xl:columns-2 xl:gap-12 [&>*]:break-inside-avoid">
+          {/* Two explicit columns on wide screens, so the order is fixed: the
+              story, work and skills on the left; schooling, achievements and
+              papers on the right. One column below xl, in the same order. */}
+          <div className="grid gap-12 xl:grid-cols-2 xl:items-start">
+          <div className="min-w-0">
             <Reveal>
               <h1 className="font-mono text-2xl font-semibold tracking-tight md:text-3xl">
                 <span className="text-primary">$ </span>cat about.md
@@ -62,8 +65,15 @@ export default function AboutPage() {
               </p>
             </Reveal>
 
+            <section className="mt-10">
+              <h2 className="font-mono text-lg font-semibold">
+                <span className="text-primary">$ </span>cat experience.log
+              </h2>
+              <Timeline entries={experience} />
+            </section>
+
             <Reveal delay={0.15}>
-              <h2 className="mt-10 font-mono text-lg font-semibold">
+              <h2 className="mt-12 font-mono text-lg font-semibold">
                 <span className="text-primary">$ </span>ls skills/
               </h2>
               <div className="mt-5 flex flex-wrap gap-2">
@@ -75,14 +85,10 @@ export default function AboutPage() {
               </div>
             </Reveal>
 
-            <section className="mt-12">
-              <h2 className="font-mono text-lg font-semibold">
-                <span className="text-primary">$ </span>cat experience.log
-              </h2>
-              <Timeline entries={experience} />
-            </section>
+          </div>
 
-            <section className="mt-12">
+          <div className="min-w-0">
+            <section>
               <h2 className="font-mono text-lg font-semibold">
                 <span className="text-primary">$ </span>cat education.log
               </h2>
@@ -123,18 +129,27 @@ export default function AboutPage() {
               </h2>
               <div className="mt-5 space-y-4">
                 {publications.map((pub) => (
-                  <a
+                  <article
                     key={pub.doi}
-                    href={doiUrl(pub.doi)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group block rounded-xl border border-border/60 bg-card/60 p-5 transition-colors hover:border-primary/40"
+                    className="rounded-xl border border-border/60 bg-card/60 p-5 transition-colors hover:border-primary/40"
                   >
-                    <p className="font-mono text-xs text-muted-foreground">
-                      {pub.venue} · {pub.year} · {pub.type}
-                    </p>
-                    <h3 className="mt-2 font-medium leading-snug group-hover:text-primary">
-                      {pub.title}
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-mono text-xs text-muted-foreground">
+                        {pub.venue} · {pub.year} · {pub.type}
+                      </p>
+                      {pub.journal && (
+                        <LogoTile logo={pub.journal.logo} className="h-7 w-32 shrink-0 px-2.5" />
+                      )}
+                    </div>
+                    <h3 className="mt-2 font-medium leading-snug">
+                      <a
+                        href={doiUrl(pub.doi)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:text-primary"
+                      >
+                        {pub.title}
+                      </a>
                     </h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                       {pub.authors.map((a, i) => (
@@ -146,14 +161,17 @@ export default function AboutPage() {
                         </span>
                       ))}
                     </p>
-                    <p className="mt-2 inline-flex items-center gap-1 font-mono text-xs text-primary">
-                      doi:{pub.doi}
-                      <ArrowUpRight className="size-3" />
-                    </p>
-                  </a>
+                    <PaperBadges
+                      doi={pub.doi}
+                      journal={pub.journal}
+                      citations={pub.citations}
+                      className="mt-4"
+                    />
+                  </article>
                 ))}
               </div>
             </Reveal>
+          </div>
           </div>
 
           {/* Portrait + facts */}

@@ -3,9 +3,13 @@
  * (public/cv/danial-dirar-cv.pdf). Keep the two in step.
  */
 
+/** An organisation's mark. Entries without one get a monogram tile. */
+export type EntryLogo = { src: string; width: number; height: number };
+
 export type TimelineEntry = {
   title: string;
   org: string;
+  logo?: EntryLogo;
   /** Human-readable range, e.g. "Jul 2026 – present". */
   when: string;
   detail: string;
@@ -14,8 +18,9 @@ export type TimelineEntry = {
 
 export const experience: TimelineEntry[] = [
   {
-    title: "Executive",
+    title: "Executive (AI Engineering)",
     org: "Divergent Technologies Limited",
+    logo: { src: "/logos/org/divergent.png", width: 84, height: 100 },
     when: "Nov 2026 – present",
     detail:
       "Builds business-tailored video generation workflows in ComfyUI and automation tools at an IT solutions firm serving clients in fintech, telecom and healthcare.",
@@ -24,6 +29,7 @@ export const experience: TimelineEntry[] = [
   {
     title: "Business Development Executive",
     org: "Codexa IT LLC",
+    logo: { src: "/logos/org/codexa.png", width: 318, height: 88 },
     when: "Aug 2026 – Oct 2026",
     detail:
       "Supported business development for a US-based property-preservation outsourcing company, working with its American clients and field vendor network.",
@@ -31,6 +37,7 @@ export const experience: TimelineEntry[] = [
   {
     title: "Founder",
     org: "Haifa Intelligence, AI/ML studio",
+    logo: { src: "/logos/org/haifa-intelligence.svg", width: 64, height: 64 },
     when: "Jul 2026 – present",
     detail:
       "Runs an independent studio building local-first, privacy-respecting AI tools — including Haifa HiveMind — and generative image and video pipelines in ComfyUI with custom LoRA models, all on local GPUs.",
@@ -62,9 +69,24 @@ export const education: TimelineEntry[] = [
   {
     title: "B.Sc. (Hons.) in Computer Science and Engineering",
     org: "BRAC University",
+    logo: { src: "/logos/org/brac-university.svg", width: 250, height: 240 },
     when: "Jun 2022 – Oct 2026",
     detail:
       "Thesis: forecasting groundwater levels in the Barind region of northwest Bangladesh from historical hydrological and environmental data, with PyTorch models that currently reach an R² of about 0.93.",
+  },
+  {
+    title: "Higher Secondary Certificate (HSC)",
+    org: "Govt. City College, Rajshahi",
+    logo: { src: "/logos/org/city-college-rajshahi.webp", width: 200, height: 200 },
+    when: "2021",
+    detail: "GPA 5.00 out of 5.00.",
+  },
+  {
+    title: "Secondary School Certificate (SSC)",
+    org: "Govt. Laboratory High School, Rajshahi",
+    logo: { src: "/logos/org/lab-school-rajshahi.svg", width: 750, height: 750 },
+    when: "2019",
+    detail: "GPA 5.00 out of 5.00.",
   },
 ];
 

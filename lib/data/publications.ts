@@ -6,7 +6,7 @@
  * `doi` is always sent through the canonical https://doi.org/<doi> resolver
  * so links survive publisher URL changes.
  */
-import { doiUrl, research } from "./research";
+import { doiUrl, research, type Journal } from "./research";
 
 export type Publication = {
   title: string;
@@ -16,6 +16,8 @@ export type Publication = {
   doi: string;
   /** Short, human label for the contribution type. */
   type: string;
+  journal?: Journal;
+  citations?: number;
 };
 
 export const publications: Publication[] = research
@@ -27,6 +29,8 @@ export const publications: Publication[] = research
     year: p.year,
     doi: p.doi as string,
     type: "Journal article",
+    journal: p.journal,
+    citations: p.citations,
   }));
 
 export { doiUrl };

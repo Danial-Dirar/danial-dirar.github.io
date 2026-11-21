@@ -5,6 +5,7 @@ import { ProjectCard } from "@/components/shared/project-card";
 import { PostCard } from "@/components/shared/post-card";
 import { Reveal } from "@/components/motion/reveal";
 import { FieldMap } from "@/components/water/field-map";
+import { PipelineGraph } from "@/components/ai/pipeline-graph";
 import { WaterBudget, type BudgetRow } from "@/components/water/water-budget";
 import { featuredProjects } from "@/lib/data/projects";
 import { getAllPosts } from "@/lib/blog";
@@ -56,18 +57,19 @@ export default function HomePage() {
     <>
       <TerminalHero />
 
-      {/* Field work — where the water research happens */}
+      {/* Two benches side by side: the water research on the left, the
+          local-AI work on the right. Stacked on phones. */}
       <section className="border-y border-border/40 bg-card/30 py-16 md:py-20">
-        <div className="container-page grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <div>
+        <div className="container-page grid items-start gap-16 lg:grid-cols-[minmax(0,9fr)_minmax(0,11fr)] lg:gap-10">
+          <div className="min-w-0">
             <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" />
-            <p className="mt-5 max-w-xl leading-relaxed text-muted-foreground text-pretty">
-              The Barind Tract in northwest Bangladesh irrigates almost all of its dry-season
-              rice from groundwater, and its water table falls by up to 0.39 m a year. My
-              research asks where that water can be put back — managed aquifer recharge
-              through canals and reservoirs — and how far ahead the wells can be forecast.
+            <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
+              The Barind Tract irrigates almost all of its dry-season rice from groundwater,
+              and its water table falls by up to 0.39 m a year. My research asks where that
+              water can be put back, and how far ahead the wells can be forecast.
             </p>
-            <div className="mt-8 max-w-xl">
+            <FieldMap className="mt-8" />
+            <div className="mt-8">
               <WaterBudget
                 command="water-budget --tract barind"
                 rows={WATER_BUDGET}
@@ -75,7 +77,18 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <FieldMap />
+
+          <div className="min-w-0">
+            <SectionHeader command="comfy run local-ai.json" href="/research#local-ai" linkLabel="the bench" />
+            <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
+              The other bench: AI that runs on hardware you own. Open-weight LLMs, distilled
+              and fine-tuned to fit one GPU and served offline, and ComfyUI pipelines for
+              image and video with custom LoRAs. Queue it and watch it run.
+            </p>
+            <div className="mt-8">
+              <PipelineGraph />
+            </div>
+          </div>
         </div>
       </section>
 

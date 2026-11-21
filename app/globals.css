@@ -837,6 +837,211 @@
   --o: 850ms;
 }
 
+/* ── Local-AI pipeline: a ComfyUI-style node graph ──────────── */
+.pipeline-graph {
+  --wire-model: oklch(0.74 0.12 300);
+  --wire-text: var(--brand-2);
+  --wire-image: oklch(0.75 0.14 355);
+}
+.pg-canvas {
+  /* ComfyUI's dotted canvas. */
+  background-image: radial-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.pg-wire {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-opacity: 0.35;
+  transition: stroke-opacity 0.3s ease;
+}
+.pg-wire[data-type="MODEL"] { stroke: var(--wire-model); }
+.pg-wire[data-type="TEXT"] { stroke: var(--wire-text); }
+.pg-wire[data-type="IMAGE"] { stroke: var(--wire-image); }
+.pg-wire.is-live {
+  stroke-opacity: 0.9;
+  stroke-dasharray: 7 7;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pg-wire.is-live {
+    animation: pg-flow 0.9s linear infinite;
+  }
+}
+@keyframes pg-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+.pg-node {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
+  border-radius: 0.5rem;
+  background: oklch(0.205 0.01 165);
+  box-shadow: 0 8px 22px -14px rgb(0 0 0 / 0.8);
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.3s ease;
+}
+.pg-node:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.pg-node:hover,
+.pg-node[data-active] {
+  border-color: color-mix(in oklch, var(--primary) 45%, transparent);
+}
+.pg-node[data-status="idle"] {
+  opacity: 0.55;
+}
+.pg-node[data-status="running"] {
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 1px var(--primary),
+    0 0 22px -4px color-mix(in oklch, var(--primary) 55%, transparent);
+}
+.pg-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: oklch(0.25 0.012 165);
+  padding: 0.4rem 0.55rem;
+  color: var(--foreground);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.pg-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--foreground) 35%, transparent);
+  transition: background 0.2s ease;
+}
+.pg-node[data-status="done"] .pg-dot {
+  background: var(--primary);
+}
+.pg-node[data-status="running"] .pg-dot {
+  background: var(--brand-2);
+}
+/* ComfyUI's per-node progress bar along the title. */
+.pg-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--primary);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pg-node[data-status="running"] .pg-progress {
+    animation: pg-progress 0.42s linear both;
+  }
+}
+@keyframes pg-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+.pg-body {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.5rem 0.6rem 0.6rem;
+}
+.pg-widget {
+  display: flex;
+  min-width: 0;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.375rem;
+  background: oklch(0.17 0.01 165);
+  padding: 0.2rem 0.45rem;
+  font-size: 11px;
+}
+.pg-note {
+  padding-top: 0.15rem;
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.pg-socket {
+  position: absolute;
+  top: 0.95rem;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border: 2px solid var(--wire-model);
+  border-radius: 999px;
+  background: oklch(0.205 0.01 165);
+  z-index: 1;
+}
+.pg-in { left: -6px; }
+.pg-out { right: -6px; }
+.pg-socket[data-type="TEXT"] { border-color: var(--wire-text); }
+.pg-socket[data-type="IMAGE"] { border-color: var(--wire-image); }
+.pg-node[data-status="done"] .pg-out { background: currentColor; }
+.pg-node[data-status="done"] .pg-out[data-type="MODEL"] { background: var(--wire-model); }
+.pg-node[data-status="done"] .pg-out[data-type="TEXT"] { background: var(--wire-text); }
+.pg-node[data-status="done"] .pg-out[data-type="IMAGE"] { background: var(--wire-image); }
+
+.pg-answer {
+  border-radius: 0.375rem;
+  background: oklch(0.17 0.01 165);
+  padding: 0.45rem 0.55rem;
+  color: var(--muted-foreground);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.pg-answer.is-ready {
+  color: var(--foreground);
+}
+.pg-preview {
+  position: relative;
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  /* ComfyUI's empty-preview checkerboard. */
+  background:
+    conic-gradient(oklch(0.2 0.01 165) 25%, oklch(0.17 0.01 165) 0 50%, oklch(0.2 0.01 165) 0 75%, oklch(0.17 0.01 165) 0) 0 0 / 16px 16px;
+}
+.pg-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pg-preview-wait {
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pg-preview-img {
+    animation: pg-develop 0.9s var(--ease-out-expo) both;
+  }
+}
+/* The finished image "develops": noise-blur to sharp, like a sampler's
+   last steps. Opacity and filter on a small element only. */
+@keyframes pg-develop {
+  from {
+    opacity: 0;
+    filter: blur(10px) saturate(0.4);
+  }
+}
+
 /* ── Timeline: the rail draws down as it scrolls in ───────── */
 .timeline {
   position: relative;

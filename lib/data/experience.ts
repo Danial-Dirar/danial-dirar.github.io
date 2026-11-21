@@ -4,7 +4,14 @@
  */
 
 /** An organisation's mark. Entries without one get a monogram tile. */
-export type EntryLogo = { src: string; width: number; height: number };
+export type EntryLogo = {
+  src: string;
+  width: number;
+  height: number;
+  /** "paper" (default) for marks on white, "dark" for white-on-black marks,
+   *  "cover" for a mark that brings its own background and fills the tile. */
+  tile?: "paper" | "dark" | "cover";
+};
 
 export type TimelineEntry = {
   title: string;
@@ -46,6 +53,7 @@ export const experience: TimelineEntry[] = [
   {
     title: "Chief Communication Officer",
     org: "AFK Productions",
+    logo: { src: "/logos/org/afk-productions.webp", width: 400, height: 203, tile: "dark" },
     when: "Feb 2025 – Jun 2025",
     detail:
       "Led communications for esports events run with brands including MSI, ASUS ROG and Acer Predator.",
@@ -53,12 +61,14 @@ export const experience: TimelineEntry[] = [
   {
     title: "Entry Level Software Engineer (part-time)",
     org: "Arabian Gulf Associates Co. Ltd",
+    logo: { src: "/logos/org/agaco.webp", width: 240, height: 240 },
     when: "Jul 2024 – Oct 2024",
     detail: "Worked part-time as a technical IT engineer at a recruiting agency.",
   },
   {
     title: "Founder and Owner",
     org: "Steam Store Bangladesh",
+    logo: { src: "/logos/org/steam-store-bd.webp", width: 240, height: 240, tile: "cover" },
     when: "Jul 2016 – 2026",
     detail:
       "Founded and ran an online store selling digital products for ten years, handling day-to-day operations, PR and customer communication.",

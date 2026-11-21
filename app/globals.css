@@ -1437,3 +1437,41 @@
     rotate: -6deg;
   }
 }
+
+/* ── A button that catches the light on hover ──────────────── */
+.btn-glance {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.btn-glance::before {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px 0;
+  width: 40%;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in oklab, var(--primary) 28%, transparent) 42%,
+    color-mix(in oklab, white 30%, transparent) 50%,
+    color-mix(in oklab, var(--primary) 28%, transparent) 58%,
+    transparent 100%
+  );
+  transform: translateX(-130%) skewX(-14deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-glance:hover::before,
+  .btn-glance:focus-visible::before {
+    animation: btn-glance 0.75s cubic-bezier(0.45, 0, 0.25, 1);
+  }
+}
+@keyframes btn-glance {
+  from {
+    transform: translateX(-130%) skewX(-14deg);
+  }
+  to {
+    transform: translateX(300%) skewX(-14deg);
+  }
+}

@@ -212,13 +212,18 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="mx-auto mt-5 flex max-w-[260px] flex-col gap-2.5">
-              <Button asChild className="rounded-full">
+              <CvDialog />
+              {/* Outlined in green; a sheen glances across it on hover. */}
+              <Button
+                asChild
+                variant="outline"
+                className="btn-glance rounded-full border-primary/60 text-primary hover:border-primary hover:bg-primary/10 hover:text-primary dark:border-primary/60 dark:bg-transparent dark:hover:border-primary dark:hover:bg-primary/10"
+              >
                 <a href={`mailto:${site.email}`}>
                   <Mail className="size-4" />
                   Get in touch
                 </a>
               </Button>
-              <CvDialog />
               <Button asChild variant="outline" className="rounded-full">
                 <a href={site.social.github} target="_blank" rel="noreferrer">
                   <GitHubIcon className="size-4" />

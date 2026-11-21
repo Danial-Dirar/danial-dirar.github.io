@@ -60,7 +60,7 @@ export function CvDialog() {
 
   return (
     <>
-      <Button variant="outline" className="rounded-full" onClick={() => setOpen(true)}>
+      <Button className="rounded-full" onClick={() => setOpen(true)}>
         <FileText className="size-4" />
         View CV
       </Button>

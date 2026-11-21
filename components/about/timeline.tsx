@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { asset } from "@/lib/asset";
+import { cn } from "@/lib/utils";
 import type { TimelineEntry } from "@/lib/data/experience";
 
 /** "AFK Productions" → AFK, "Steam Store Bangladesh" → SSB. */
@@ -28,13 +29,26 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
         >
           <div className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-3.5">
             {entry.logo ? (
-              <span className="flex h-11 w-14 items-center justify-center rounded-md bg-[oklch(0.975_0.006_95)] p-1">
+              <span
+                className={cn(
+                  "flex h-11 w-14 items-center justify-center overflow-hidden rounded-md",
+                  entry.logo.tile === "cover"
+                    ? "ring-1 ring-border/60"
+                    : entry.logo.tile === "dark"
+                      ? "bg-black p-1.5 ring-1 ring-border/60"
+                      : "bg-[oklch(0.975_0.006_95)] p-1"
+                )}
+              >
                 <Image
                   src={asset(entry.logo.src)}
                   alt={`${entry.org} logo`}
                   width={entry.logo.width}
                   height={entry.logo.height}
-                  className="h-auto max-h-full w-auto max-w-full object-contain"
+                  className={
+                    entry.logo.tile === "cover"
+                      ? "size-full object-cover"
+                      : "h-auto max-h-full w-auto max-w-full object-contain"
+                  }
                 />
               </span>
             ) : (

@@ -837,30 +837,81 @@
   --o: 850ms;
 }
 
-/* ── Local-AI pipeline: a ComfyUI-style node graph ──────────── */
-.pipeline-graph {
-  --wire-model: oklch(0.74 0.12 300);
-  --wire-text: var(--brand-2);
-  --wire-image: oklch(0.75 0.14 355);
+/* ── Local-AI pipeline: a ComfyUI-style canvas ──────────────── */
+.container-wide {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1600px;
+  padding-inline: 1.25rem;
 }
-.pg-canvas {
+@media (min-width: 768px) {
+  .container-wide {
+    padding-inline: 2rem;
+  }
+}
+.pipeline-graph {
+  /* ComfyUI's own socket colours. */
+  --wire-model: oklch(0.74 0.12 300);
+  --wire-clip: oklch(0.86 0.14 95);
+  --wire-conditioning: oklch(0.78 0.13 60);
+  --wire-latent: oklch(0.75 0.14 355);
+  --wire-image: oklch(0.78 0.1 230);
+  --wire-docs: oklch(0.78 0.11 175);
+  --wire-text: var(--primary);
+}
+.pg-viewport {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 20%, transparent) transparent;
   /* ComfyUI's dotted canvas. */
+  background-color: oklch(0.15 0.008 165);
   background-image: radial-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
-  background-size: 16px 16px;
+  background-size: 14px 14px;
+}
+.pg-viewport:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.pg-group {
+  position: absolute;
+  border: 1px solid;
+  border-radius: 6px;
+}
+.pg-group[data-tone="violet"] {
+  border-color: oklch(0.6 0.1 300 / 45%);
+  background: oklch(0.45 0.08 300 / 14%);
+}
+.pg-group[data-tone="amber"] {
+  border-color: oklch(0.7 0.11 70 / 40%);
+  background: oklch(0.5 0.08 70 / 12%);
+}
+.pg-group-title {
+  display: block;
+  padding: 6px 12px;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  color: color-mix(in oklch, var(--foreground) 70%, transparent);
 }
 .pg-wire {
   fill: none;
-  stroke-width: 2;
+  stroke-width: 2.5;
   stroke-linecap: round;
   stroke-opacity: 0.35;
   transition: stroke-opacity 0.3s ease;
 }
 .pg-wire[data-type="MODEL"] { stroke: var(--wire-model); }
-.pg-wire[data-type="TEXT"] { stroke: var(--wire-text); }
+.pg-wire[data-type="CLIP"] { stroke: var(--wire-clip); }
+.pg-wire[data-type="CONDITIONING"] { stroke: var(--wire-conditioning); }
+.pg-wire[data-type="LATENT"] { stroke: var(--wire-latent); }
 .pg-wire[data-type="IMAGE"] { stroke: var(--wire-image); }
+.pg-wire[data-type="DOCS"] { stroke: var(--wire-docs); }
+.pg-wire[data-type="TEXT"] { stroke: var(--wire-text); }
 .pg-wire.is-live {
   stroke-opacity: 0.9;
-  stroke-dasharray: 7 7;
+  stroke-dasharray: 8 8;
 }
 @media (prefers-reduced-motion: no-preference) {
   .pg-wire.is-live {
@@ -869,21 +920,21 @@
 }
 @keyframes pg-flow {
   to {
-    stroke-dashoffset: -14;
+    stroke-dashoffset: -16;
   }
 }
 
 .pg-node {
-  position: relative;
+  position: absolute;
   display: block;
-  width: 100%;
-  border: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
-  border-radius: 0.5rem;
-  background: oklch(0.205 0.01 165);
-  box-shadow: 0 8px 22px -14px rgb(0 0 0 / 0.8);
+  border: 1px solid oklch(0.35 0.01 165);
+  border-radius: 8px;
+  background: oklch(0.22 0.008 165);
+  box-shadow: 0 10px 26px -14px rgb(0 0 0 / 0.85);
   text-align: left;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
+  color: var(--foreground);
   cursor: pointer;
   transition:
     border-color 0.25s ease,
@@ -891,12 +942,12 @@
     opacity 0.3s ease;
 }
 .pg-node:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
 }
 .pg-node:hover,
 .pg-node[data-active] {
-  border-color: color-mix(in oklch, var(--primary) 45%, transparent);
+  border-color: color-mix(in oklch, var(--primary) 50%, transparent);
 }
 .pg-node[data-status="idle"] {
   opacity: 0.55;
@@ -904,50 +955,43 @@
 .pg-node[data-status="running"] {
   border-color: var(--primary);
   box-shadow:
-    0 0 0 1px var(--primary),
-    0 0 22px -4px color-mix(in oklch, var(--primary) 55%, transparent);
+    0 0 0 2px var(--primary),
+    0 0 30px -4px color-mix(in oklch, var(--primary) 60%, transparent);
 }
 .pg-title {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 8px;
   overflow: hidden;
-  border-bottom: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
-  border-radius: 0.5rem 0.5rem 0 0;
-  background: oklch(0.25 0.012 165);
-  padding: 0.4rem 0.55rem;
-  color: var(--foreground);
-  font-size: 11.5px;
+  border-bottom: 1px solid oklch(0.32 0.01 165);
+  border-radius: 8px 8px 0 0;
+  background: oklch(0.27 0.01 165);
+  padding: 0 10px;
   font-weight: 600;
 }
 .pg-dot {
   flex: none;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
-  background: color-mix(in oklch, var(--foreground) 35%, transparent);
+  background: color-mix(in oklch, var(--foreground) 30%, transparent);
   transition: background 0.2s ease;
 }
-.pg-node[data-status="done"] .pg-dot {
-  background: var(--primary);
-}
-.pg-node[data-status="running"] .pg-dot {
-  background: var(--brand-2);
-}
-/* ComfyUI's per-node progress bar along the title. */
+.pg-node[data-status="done"] .pg-dot { background: var(--primary); }
+.pg-node[data-status="running"] .pg-dot { background: var(--brand-2); }
 .pg-progress {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: 2px;
+  height: 3px;
   background: var(--primary);
   transform-origin: left;
   transform: scaleX(0);
 }
 @media (prefers-reduced-motion: no-preference) {
   .pg-node[data-status="running"] .pg-progress {
-    animation: pg-progress 0.42s linear both;
+    animation: pg-progress 0.38s linear both;
   }
 }
 @keyframes pg-progress {
@@ -955,69 +999,72 @@
     transform: scaleX(1);
   }
 }
-.pg-body {
-  display: grid;
-  gap: 0.3rem;
-  padding: 0.5rem 0.6rem 0.6rem;
+/* One input/output row. Sockets sit on the node's edge: the body has 10px
+   side padding, so -15px puts a 10px socket's centre on the border. */
+.pg-io {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.pg-widget-row {
+  display: flex;
+  align-items: center;
 }
 .pg-widget {
   display: flex;
   min-width: 0;
+  flex: 1;
   justify-content: space-between;
-  gap: 0.75rem;
-  border-radius: 0.375rem;
-  background: oklch(0.17 0.01 165);
-  padding: 0.2rem 0.45rem;
-  font-size: 11px;
-}
-.pg-note {
-  padding-top: 0.15rem;
-  color: var(--muted-foreground);
-  font-family: var(--font-sans);
+  gap: 12px;
+  border-radius: 6px;
+  background: oklch(0.17 0.008 165);
+  padding: 1px 8px;
   font-size: 12px;
-  line-height: 1.45;
 }
 .pg-socket {
   position: absolute;
-  top: 0.95rem;
+  top: 50%;
   width: 10px;
   height: 10px;
   margin-top: -5px;
-  border: 2px solid var(--wire-model);
   border-radius: 999px;
-  background: oklch(0.205 0.01 165);
-  z-index: 1;
+  background: var(--wire-model);
 }
-.pg-in { left: -6px; }
-.pg-out { right: -6px; }
-.pg-socket[data-type="TEXT"] { border-color: var(--wire-text); }
-.pg-socket[data-type="IMAGE"] { border-color: var(--wire-image); }
-.pg-node[data-status="done"] .pg-out { background: currentColor; }
-.pg-node[data-status="done"] .pg-out[data-type="MODEL"] { background: var(--wire-model); }
-.pg-node[data-status="done"] .pg-out[data-type="TEXT"] { background: var(--wire-text); }
-.pg-node[data-status="done"] .pg-out[data-type="IMAGE"] { background: var(--wire-image); }
+.pg-in { left: -15px; }
+.pg-out { right: -15px; }
+.pg-socket[data-type="CLIP"] { background: var(--wire-clip); }
+.pg-socket[data-type="CONDITIONING"] { background: var(--wire-conditioning); }
+.pg-socket[data-type="LATENT"] { background: var(--wire-latent); }
+.pg-socket[data-type="IMAGE"] { background: var(--wire-image); }
+.pg-socket[data-type="DOCS"] { background: var(--wire-docs); }
+.pg-socket[data-type="TEXT"] { background: var(--wire-text); }
+.pg-node[data-status="idle"] .pg-socket { opacity: 0.6; }
 
 .pg-answer {
-  border-radius: 0.375rem;
-  background: oklch(0.17 0.01 165);
-  padding: 0.45rem 0.55rem;
+  display: block;
+  height: 56px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: oklch(0.17 0.008 165);
+  padding: 6px 8px;
   color: var(--muted-foreground);
-  font-size: 11.5px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.45;
 }
-.pg-answer.is-ready {
-  color: var(--foreground);
-}
+.pg-answer.is-ready { color: var(--foreground); }
 .pg-preview {
   position: relative;
   display: grid;
-  aspect-ratio: 1;
+  height: 208px;
+  margin-top: 8px;
   place-items: center;
   overflow: hidden;
-  border-radius: 0.375rem;
-  /* ComfyUI's empty-preview checkerboard. */
+  border-radius: 6px;
   background:
-    conic-gradient(oklch(0.2 0.01 165) 25%, oklch(0.17 0.01 165) 0 50%, oklch(0.2 0.01 165) 0 75%, oklch(0.17 0.01 165) 0) 0 0 / 16px 16px;
+    conic-gradient(oklch(0.2 0.008 165) 25%, oklch(0.17 0.008 165) 0 50%, oklch(0.2 0.008 165) 0 75%, oklch(0.17 0.008 165) 0) 0 0 / 16px 16px;
 }
 .pg-preview-img {
   width: 100%;
@@ -1026,20 +1073,69 @@
 }
 .pg-preview-wait {
   color: var(--muted-foreground);
-  font-size: 11px;
+  font-size: 12px;
 }
 @media (prefers-reduced-motion: no-preference) {
   .pg-preview-img {
     animation: pg-develop 0.9s var(--ease-out-expo) both;
   }
 }
-/* The finished image "develops": noise-blur to sharp, like a sampler's
-   last steps. Opacity and filter on a small element only. */
+/* The finished image "develops", like a sampler's last steps. */
 @keyframes pg-develop {
   from {
     opacity: 0;
     filter: blur(10px) saturate(0.4);
   }
+}
+
+/* Bottom-left: the canvas is empty under the first nodes, so neither the
+   minimap nor the zoom readout covers a node. */
+.pg-minimap {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--foreground) 18%, transparent);
+  border-radius: 6px;
+  background: oklch(0.13 0.008 165 / 85%);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+.pg-minimap:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.pg-mm-group,
+.pg-mm-node,
+.pg-mm-view {
+  position: absolute;
+  pointer-events: none;
+}
+.pg-mm-group[data-tone="violet"] { background: oklch(0.45 0.08 300 / 30%); }
+.pg-mm-group[data-tone="amber"] { background: oklch(0.5 0.08 70 / 26%); }
+.pg-mm-node {
+  border-radius: 1px;
+  background: color-mix(in oklch, var(--foreground) 30%, transparent);
+}
+.pg-mm-node[data-status="done"] { background: color-mix(in oklch, var(--primary) 70%, transparent); }
+.pg-mm-node[data-status="running"] { background: var(--brand-2); }
+.pg-mm-view {
+  top: 0;
+  bottom: 0;
+  border: 1px solid color-mix(in oklch, var(--foreground) 70%, transparent);
+  border-radius: 2px;
+}
+.pg-zoom {
+  position: absolute;
+  left: 186px;
+  bottom: 10px;
+  border-radius: 6px;
+  background: oklch(0.13 0.008 165 / 85%);
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  pointer-events: none;
 }
 
 /* ── Timeline: the rail draws down as it scrolls in ───────── */

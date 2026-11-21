@@ -60,7 +60,7 @@ export default function HomePage() {
       {/* Two benches side by side: the water research on the left, the
           local-AI work on the right. Stacked on phones. */}
       <section className="border-y border-border/40 bg-card/30 py-16 md:py-20">
-        <div className="container-page grid items-start gap-16 lg:grid-cols-[minmax(0,9fr)_minmax(0,11fr)] lg:gap-10">
+        <div className="container-wide grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:gap-10">
           <div className="min-w-0">
             <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" />
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
@@ -83,7 +83,7 @@ export default function HomePage() {
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
               The other bench: AI that runs on hardware you own. Open-weight LLMs, distilled
               and fine-tuned to fit one GPU and served offline, and ComfyUI pipelines for
-              image and video with custom LoRAs. Queue it and watch it run.
+              image and video with custom LoRAs. Press Run and watch it work.
             </p>
             <div className="mt-8">
               <PipelineGraph />

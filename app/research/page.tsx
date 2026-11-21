@@ -32,9 +32,11 @@ export default function ResearchPage() {
           </p>
         </Reveal>
 
-        {/* The two benches, side by side: the field sites on the left, the
-            local-AI pipeline (in its detailed form) on the right. */}
-        <div className="mt-10 grid items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      </div>
+
+      {/* The two benches, side by side and wider than the text column: the
+          field sites on the left, the local-AI canvas (detailed) on the right. */}
+      <div className="container-wide mt-10 grid items-start gap-6 2xl:grid-cols-[400px_minmax(0,1fr)]">
           <div className="min-w-0 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
             <h2 className="font-mono text-sm text-muted-foreground">{"// where the field work is"}</h2>
             <FieldMap className="mt-5" />
@@ -43,15 +45,16 @@ export default function ResearchPage() {
             <h2 className="font-mono text-sm text-muted-foreground">{"// the local-AI bench"}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
               Two pipelines that run on one local GPU: a private assistant built from
-              open-weight LLMs, and ComfyUI for image and video. Queue it, then inspect any
+              open-weight LLMs, and ComfyUI for image and video. Run it, then inspect any
               node for what it does and where it runs.
             </p>
             <div className="mt-5">
               <PipelineGraph variant="detailed" />
             </div>
           </div>
-        </div>
+      </div>
 
+      <div className="container-page">
         <div className="mx-auto mt-12 max-w-3xl space-y-8">
           {ongoing.length > 0 && (
             <div>

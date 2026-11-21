@@ -12,6 +12,7 @@ import { featuredProjects, projects as allProjects } from "@/lib/data/projects";
 import { research } from "@/lib/data/research";
 import { getAllPosts } from "@/lib/blog";
 import { asset } from "@/lib/asset";
+import { cn } from "@/lib/utils";
 
 /**
  * The Barind water budget, from Hossain et al. (2026, 2025) in Applied Water
@@ -63,7 +64,7 @@ function SectionHeader({
 }
 
 export default function HomePage() {
-  const projects = featuredProjects.slice(0, 6);
+  const projects = featuredProjects;
   const allPosts = getAllPosts();
   const posts = allPosts.slice(0, 3);
 
@@ -74,7 +75,7 @@ export default function HomePage() {
       {/* Two benches side by side: the water research on the left, the
           local-AI work on the right. Stacked on phones. */}
       <section className="border-y border-border/40 bg-card/30 py-16 md:py-20">
-        <div className="container-page grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:gap-10">
+        <div className="container-page grid items-start gap-16 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:items-stretch 2xl:gap-10">
           <div className="min-w-0">
             <SectionHeader command="cat research/field.log" href="/research" linkLabel="research" count={research.length} />
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
@@ -92,7 +93,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="flex min-w-0 flex-col">
             <SectionHeader command="comfy run local-ai.json" href="/research#local-ai" linkLabel="the bench" />
             <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
               The other bench: AI that runs on hardware you own. Open-weight LLMs, distilled
@@ -103,8 +104,13 @@ export default function HomePage() {
               <PipelineGraph />
             </div>
 
-            {/* The real thing behind the sketch above. */}
-            <figure className="mt-8">
+            {/* The real thing behind the sketch above. From 2xl it sits at the
+                foot of the column, its bottom edge level with the water
+                budget's on the left; the caption moves above it for that. */}
+            <figure className="mt-8 flex flex-col 2xl:mt-auto 2xl:pt-8">
+              <figcaption className="order-first mb-2 font-mono text-[11px] text-muted-foreground">
+                The sketch above, for real: a video workflow in my own ComfyUI.
+              </figcaption>
               <a
                 href={asset("/ai/comfyui-workspace.webp")}
                 target="_blank"
@@ -131,9 +137,6 @@ export default function HomePage() {
                   className="h-auto w-full"
                 />
               </a>
-              <figcaption className="mt-2 font-mono text-[11px] text-muted-foreground">
-                The sketch above, for real: a video workflow in my own ComfyUI.
-              </figcaption>
             </figure>
           </div>
         </div>
@@ -145,11 +148,19 @@ export default function HomePage() {
           <Reveal>
             <SectionHeader command="ls projects/ --featured" href="/projects" linkLabel="all projects" count={allProjects.length} />
           </Reveal>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+          {/* Smaller cards, more of them: five across from 2xl (two full
+              rows), four across with eight on laptops, two across on
+              tablets, and the first six stacked on phones. */}
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
+            {projects.map((project, i) => (
+              <li
+                key={project.slug}
+                className={cn(i >= 6 && "max-sm:hidden", i >= 8 && "lg:max-2xl:hidden")}
+              >
+                <ProjectCard project={project} compact />
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 

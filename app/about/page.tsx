@@ -87,11 +87,31 @@ export default function AboutPage() {
                 <span className="text-primary">$ </span>cat education.log
               </h2>
               <Timeline entries={education} />
-              <ul className="mt-6 space-y-1.5 text-sm text-muted-foreground">
+              <h3 className="mt-8 font-mono text-sm text-muted-foreground">{"// achievements"}</h3>
+              <ul className="mt-3 space-y-3">
                 {achievements.map((a) => (
-                  <li key={a.title}>
-                    <span className="font-medium text-foreground">{a.title}</span>
-                    <span className="font-mono text-xs"> ({a.when})</span>. {a.detail}
+                  <li
+                    key={a.title}
+                    className="flex items-center gap-4 rounded-xl border border-border/60 bg-card/60 p-3 pr-4"
+                  >
+                    {/* The organiser's mark keeps its colours, so it sits on paper. */}
+                    <span className="grid size-16 shrink-0 place-items-center rounded-lg bg-[oklch(0.975_0.006_95)] p-1.5">
+                      <Image
+                        src={asset(a.logo.src)}
+                        alt={a.logo.alt}
+                        width={a.logo.width}
+                        height={a.logo.height}
+                        className="size-full object-contain"
+                      />
+                    </span>
+                    <span className="min-w-0 text-sm text-muted-foreground">
+                      <span className="block font-medium text-foreground">
+                        {a.title}
+                        <span className="ml-1.5 font-mono text-xs font-normal text-primary">{a.when}</span>
+                      </span>
+                      <span className="mt-0.5 block">{a.detail}</span>
+                      <span className="mt-0.5 block font-mono text-[11px]">{a.org}</span>
+                    </span>
                   </li>
                 ))}
               </ul>

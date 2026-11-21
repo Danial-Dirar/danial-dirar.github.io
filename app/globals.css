@@ -120,10 +120,11 @@
   /* From xl the depth gauge is pinned to the right edge (~4.5rem). Where the
      window is too narrow for the frame's margins to clear it, the frame pads
      itself inward (both sides, so it stays centred); on wide windows the
-     margins already do the job and the padding falls back to 2rem. */
+     margins already do the job and the padding falls back to 2rem. Capped
+     at 5rem, the gauge's width, however narrow the window. */
   @media (width >= 80rem) {
     .container-page {
-      padding-inline: max(2rem, calc(5rem - (100vw - 90rem) / 2));
+      padding-inline: clamp(2rem, calc(5rem - (100vw - 90rem) / 2), 5rem);
     }
   }
 

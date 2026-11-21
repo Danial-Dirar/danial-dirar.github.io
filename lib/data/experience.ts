@@ -14,12 +14,19 @@ export type TimelineEntry = {
 
 export const experience: TimelineEntry[] = [
   {
+    title: "Executive",
+    org: "Divergent Technologies Limited",
+    when: "Nov 2026 – present",
+    detail:
+      "Builds business-tailored video generation workflows in ComfyUI and automation tools at an IT solutions firm serving clients in fintech, telecom and healthcare.",
+    current: true,
+  },
+  {
     title: "Business Development Executive",
     org: "Codexa IT LLC",
-    when: "Aug 2026 – present",
+    when: "Aug 2026 – Oct 2026",
     detail:
-      "Supports business development for a US-based property-preservation outsourcing company, working with its American clients and field vendor network.",
-    current: true,
+      "Supported business development for a US-based property-preservation outsourcing company, working with its American clients and field vendor network.",
   },
   {
     title: "Founder",
@@ -55,10 +62,9 @@ export const education: TimelineEntry[] = [
   {
     title: "B.Sc. (Hons.) in Computer Science and Engineering",
     org: "BRAC University",
-    when: "Jun 2022 – present",
+    when: "Jun 2022 – Oct 2026",
     detail:
-      "Thesis: forecasting groundwater levels in the Barind region of northwest Bangladesh from historical hydrological and environmental data.",
-    current: true,
+      "Thesis: forecasting groundwater levels in the Barind region of northwest Bangladesh from historical hydrological and environmental data, with PyTorch models that currently reach an R² of about 0.93.",
   },
 ];
 
@@ -67,5 +73,7 @@ export const achievements = [
     title: "6th place, National Programming Contest",
     when: "2017",
     detail: "Placed sixth nationally in a programming contest organised by a2i, Bangladesh.",
+    org: "a2i (Access to Information), ICT Division, Government of Bangladesh",
+    logo: { src: "/logos/org/a2i.svg", alt: "a2i logo", width: 300, height: 309 },
   },
 ] as const;

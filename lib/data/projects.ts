@@ -84,6 +84,55 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    slug: "clipworthy",
+    title: "Clipworthy",
+    category: "AI",
+    year: "2026",
+    summary:
+      "A self-hosted pipeline that turns long podcasts into vertical YouTube Shorts on one local GPU with no paid APIs, from finding paid clipping campaigns to posting and payout.",
+    description:
+      "Clipping campaigns pay per thousand views for short clips cut from a brand's long videos. Clipworthy runs that whole loop on one machine. Every hour it reads the public campaign marketplace, shortlists campaigns that pay for YouTube Shorts and fit the channel's rules, and a local LLM reads each campaign's guides to decide whether the channel can take part. A planner ranks campaigns by expected pay per clip and queues the next source video by itself. Each job then runs eight stages: download up to 4K, word-level transcription with faster-whisper, moment selection by Qwen through Ollama that always cuts on whole sentences, a 9:16 reframe that follows the speaker's face, music removal with BS-RoFormer and loudness normalised to −14 LUFS, word-by-word captions, an NVENC render, and a QA pass on resolution, length, loudness, leftover music and sentence boundaries. Every stage writes its output with a checksum, so a stopped job resumes where it left off, and GPU stages wait for free video memory instead of pushing other local models out. Clips that pass QA are approved by hand or by Autopilot, posted at the channel's slots, and submitted to the campaign within the 30 minutes that payouts require. A FastAPI control room shows the queue, the clips and the reason behind every QA failure.",
+    tags: ["Local AI", "Video automation", "LLM"],
+    stack: ["Python", "FastAPI", "Ollama", "faster-whisper", "OpenCV", "FFmpeg NVENC", "Playwright", "SQLite"],
+    image: {
+      src: "/work/clipworthy/cover.webp",
+      blur: "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoUAAwAPu1iqU2ppaOiMAgBMB2JZACdFQAAXJkH40hDUk0k1AAA/uv+pkLWVP3OGm+UpSlinQaTEPWqvdbnD0GjJKwslbTsn+TxXk7Crx1zeLG9ebL3Kt/ABdS5IA43lDCwMCIdQByHEAP0QWkEpI/u019neb3SqAAAAA==",
+      alt: "The Clipworthy wordmark beside its control room: four vertical clips with captions, each marked Passed QA with Approve and Reject buttons",
+    },
+    highlights: [
+      { value: "8 stages", label: "from download to QA, resumable" },
+      { value: "0", label: "paid APIs: every model runs on one local GPU" },
+      { value: "−14 LUFS", label: "voices kept, music removed" },
+      { value: "30 min", label: "to submit a live clip for payout" },
+    ],
+    featured: true,
+  },
+  {
+    slug: "kabbik-posters",
+    title: "Kabbik Audiobook Posters",
+    category: "AI",
+    year: "2026",
+    summary:
+      "Give it a Bangla story and get the full five-format campaign set back in Kabbik's house style: art painted locally in ComfyUI, Bangla titles set by a real text engine so the conjuncts never break.",
+    description:
+      "Image models are good at art and bad at Bangla: ask one to write a title and the conjuncts quietly break. So in this pipeline the model only paints, and every Bangla letter is set by a real text engine. A story arrives as a DOCX and is turned into clean Unicode, refusing Bijoy-encoded text. Claude Code reads the whole story and makes the creative calls: a spoiler-safe hook, the characters, the mood, the accent colour and how to split the title, writing its reasons into a decisions file for each book. House-style montage prompts go to ComfyUI with Krea 2 Turbo on an 8 GB GPU, four seeds each, upscaled 2× with Real-ESRGAN. Seeds are checked against the story and rejected for cropped heads, seams, side bars, stray logos or details that contradict a character. A font sweep compares two to four story-matched Bangla fonts, the title is laid out in Chromium with HarfBuzz shaping and fitted into the free band between the faces, and seven automatic gates check it before deliver.py writes the audiobook cover, push notification, website hero, thumbnail and social poster. Every piece of the client's feedback becomes a permanent rule, in the code when a machine can check it and in the skills when it is a judgement call.",
+    tags: ["Generative AI", "Bangla typography", "Client work"],
+    stack: ["Python", "ComfyUI", "Krea 2 Turbo", "Real-ESRGAN", "Playwright", "HarfBuzz", "OpenCV", "Claude Code"],
+    client: "Kabbik Audiobook, Dhaka",
+    image: {
+      src: "/work/kabbik-posters/cover.webp",
+      blur: "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoUAAwAPu1iqU2ppaOiMAgBMB2JZwDE2CPqJOXq6Om/D6AAAP7vY0terIK/ONoF9nzFQDAEhbsSaMDtDYaF8+L7J3M/Pzc7DkZm1RCJD4SuHthjuIEa48C3W3VIVViYLZHQAA==",
+      alt: "Eight Bangla audiobook covers made by the pipeline, among them নেকড়ে বালক, ক্যাসেট, ডেলিভারি বয় and শেষ কল, each with a typeset title over painted art",
+    },
+    highlights: [
+      { value: "20 books", label: "run through the pipeline" },
+      { value: "100", label: "deliverables, five formats per book" },
+      { value: "7 gates", label: "checked before any file is written" },
+      { value: "48", label: "approved posters the house style was learned from" },
+    ],
+    featured: true,
+  },
+  {
     slug: "haifa-hivemind",
     title: "Haifa HiveMind",
     category: "AI",
@@ -108,7 +157,6 @@ export const projects: Project[] = [
       alt: "Haifa HiveMind architecture — Electron/Mobile clients over a local FastAPI backend, ChromaDB + SQLite, and an Ollama model server, all on-device",
       blur: "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAwCdASoYABIAPu1ur1KppiQiqAgBMB2JZwDM0BbG3gAA/vAihCc3fU/g6pMSUgUob/n06yYZfk92gGIeMARAAAA=",
     },
-    featured: true,
   },
   {
     slug: "rtx-3090-48gb-validator",
@@ -177,7 +225,6 @@ export const projects: Project[] = [
     },
     credits: "Built together with Tanzimul Karim.",
     water: true,
-    featured: true,
   },
   {
     slug: "creditsense-ai",
@@ -287,6 +334,7 @@ export const projects: Project[] = [
       alt: "DishDash architecture — a single Flutter app serving both restaurant owners and food lovers over a Firebase-only backend (Auth + Cloud Firestore), with OpenStreetMap for maps and device plugins for GPS, camera and native share",
       blur: "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAwCdASoYABIAPu1wsFIppiSiqAgBMB2JZwDM0BEOSIPgXSUmXUAA/uPmwu4dIQ4kT0i8Lj5M25VahuiTABV4gdQu5bzKxhzIK8LMbatJZ9+9AAA=",
     },
+    featured: true,
   },
   {
     slug: "shipsight-ai",
@@ -304,6 +352,7 @@ export const projects: Project[] = [
       blur: "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAwCdASoUAA0APu1iqU2ppaQiMAgBMB2JZACsACHgRzPURH0u4AAA/uw9rzC7SiLQ8r8sJSp8Dz4bi26vgp/kc8A0dntfYD3VrKN2jT+hHacvnAtGw9AA",
       alt: "A parcel with an on-time clock, surrounded by order details the model reads: discount offered, weight in grams, mode of shipment",
     },
+    featured: true,
   },
   {
     slug: "distributed-ml",
@@ -323,6 +372,7 @@ export const projects: Project[] = [
       alt: "A master node handing work to four worker machines, sending more to the ones with the lightest load",
     },
     water: true,
+    featured: true,
   },
   {
     slug: "haifa-os",
@@ -341,6 +391,7 @@ export const projects: Project[] = [
       blur: "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAQAwCdASoUAA0APu1iqU2ppaQiMAgBMB2JZwAAW+wadBgA/vDMfFUHG5RGHJ28nS5GjRbdWNAAAA==",
       alt: "The Haifa OS mark — a rose ring around the word Haifa — with notes for the archiso profile, the Calamares installer and pacman",
     },
+    featured: true,
   },
   {
     slug: "steam-store-bd",
@@ -398,7 +449,22 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((p) => p.featured);
+/** The owner's picks, in the order the home page shows them. */
+const FEATURED_ORDER = [
+  "groundwater-prediction",
+  "clipworthy",
+  "kabbik-posters",
+  "homeinn-interior",
+  "rtx-3090-48gb-validator",
+  "distributed-ml",
+  "dishdash",
+  "shipsight-ai",
+  "creditsense-ai",
+  "haifa-os",
+];
+export const featuredProjects = FEATURED_ORDER.map((slug) => projects.find((p) => p.slug === slug)).filter(
+  (p): p is Project => Boolean(p?.featured)
+);
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);

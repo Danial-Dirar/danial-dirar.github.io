@@ -13,6 +13,7 @@ const CV_PDF = asset("/cv/danial-dirar-cv.pdf");
 const CV_PAGES = [
   { src: asset("/cv/page-1.webp"), width: 1700, height: 2200 },
   { src: asset("/cv/page-2.webp"), width: 1700, height: 2200 },
+  { src: asset("/cv/page-3.webp"), width: 1700, height: 2200 },
 ] as const;
 
 const noopSubscribe = () => () => {};

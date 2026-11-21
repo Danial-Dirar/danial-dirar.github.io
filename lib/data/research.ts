@@ -14,6 +14,30 @@ export type ResearchAuthor = {
   role?: string;
 };
 
+/** An organisation's mark, shown on a light "paper" tile so its colours hold. */
+export type OrgLogo = { src: string; name: string; width: number; height: number };
+
+const LOGO = {
+  brac: { src: "/logos/org/brac-university.svg", name: "BRAC University", width: 250, height: 240 },
+  nih: { src: "/logos/org/nih.svg", name: "National Institutes of Health (NCBI SRA)", width: 374, height: 329 },
+  bmda: { src: "/work/groundwater-prediction/partners/bmda.webp", name: "Barind Multipurpose Development Authority", width: 252, height: 220 },
+  iwm: { src: "/work/groundwater-prediction/partners/iwm.webp", name: "Institute of Water Modelling", width: 389, height: 220 },
+  bwdb: { src: "/work/groundwater-prediction/partners/bwdb.webp", name: "Bangladesh Water Development Board", width: 220, height: 220 },
+  badc: { src: "/work/groundwater-prediction/partners/badc.webp", name: "Bangladesh Agricultural Development Corporation", width: 293, height: 220 },
+  springer: { src: "/logos/org/springer-nature.svg", name: "Springer Nature", width: 175, height: 17 },
+} satisfies Record<string, OrgLogo>;
+
+/** When the citation counts below were read from Google Scholar. */
+export const CITATIONS_AS_OF = "Nov 2026";
+
+const APPLIED_WATER_SCIENCE = {
+  publisher: "Springer Nature",
+  logo: LOGO.springer,
+  quartile: "Q1",
+  quartileNote: "SCImago, Water Science and Technology (2022–2025)",
+  quartileUrl: "https://www.scimagojr.com/journalsearch.php?q=21101055201&tip=sid",
+};
+
 export type ResearchPaper = {
   id: string;
   title: string;
@@ -34,6 +58,12 @@ export type ResearchPaper = {
    * what the work found or achieved. Every figure is from the paper.
    */
   changes?: { sign: "-" | "+"; value: string; label: string }[];
+  /** Where the work comes from and whose data it uses. */
+  logos?: { label: string; items: OrgLogo[] };
+  /** Publisher and standing of the journal, for published papers. */
+  journal?: typeof APPLIED_WATER_SCIENCE;
+  /** Google Scholar citation count (see CITATIONS_AS_OF). */
+  citations?: number;
 };
 
 const A = (name: string, self = false): ResearchAuthor => ({ name, self });
@@ -57,6 +87,8 @@ export const research: ResearchPaper[] = [
     year: 2026,
     volume: "Vol. 16",
     doi: "10.1007/s13201-025-02665-1",
+    journal: APPLIED_WATER_SCIENCE,
+    citations: 2,
     topics: ["Managed aquifer recharge", "Hydrology", "GIS", "Bangladesh"],
     changes: [
       { sign: "-", value: "2–3 mm/day", label: "natural recharge through the clay aquitard" },
@@ -85,6 +117,8 @@ export const research: ResearchPaper[] = [
     year: 2025,
     volume: "Vol. 15",
     doi: "10.1007/s13201-025-02588-x",
+    journal: APPLIED_WATER_SCIENCE,
+    citations: 4,
     topics: ["Managed aquifer recharge", "Water treatment", "Field study"],
     changes: [
       { sign: "-", value: "68 NTU", label: "turbidity of the incoming water" },
@@ -107,6 +141,7 @@ export const research: ResearchPaper[] = [
       Advisor("Swakkhar Shatabda"),
     ],
     venue: "Undergraduate research · in progress",
+    logos: { label: "at · data from", items: [LOGO.brac, LOGO.nih] },
     year: 2026,
     repo: "https://github.com/AbrarUI12/Metagenomic-Profiling-of-Plastic-Degrading-Microbial-Communities-in-Urban-Water-Bodies",
     topics: [
@@ -123,8 +158,9 @@ export const research: ResearchPaper[] = [
     title:
       "Deep learning for groundwater level prediction in the Barind Tract",
     status: "ongoing",
-    authors: [A("Md. Danial Dirar", true)],
+    authors: [A("Md. Danial Dirar", true), A("Md. Raisul Islam"), Advisor("Dr. Mohammad Kaykobad")],
     venue: "Undergraduate thesis · in progress",
+    logos: { label: "at · data from", items: [LOGO.brac, LOGO.bmda, LOGO.iwm, LOGO.bwdb, LOGO.badc] },
     year: 2026,
     topics: ["Machine learning", "Time-series", "Hydrology", "Deep learning"],
     abstract:

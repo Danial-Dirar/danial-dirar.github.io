@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PaperCard } from "@/components/research/paper-card";
 import { Reveal } from "@/components/motion/reveal";
 import { FieldMap } from "@/components/water/field-map";
 import { PipelineGraph } from "@/components/ai/pipeline-graph";
+import { ConferenceCard } from "@/components/research/conference-card";
 import { research } from "@/lib/data/research";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "Research",
@@ -36,12 +39,18 @@ export default function ResearchPage() {
 
       {/* The two benches, side by side and wider than the text column: the
           field sites on the left, the local-AI canvas (detailed) on the right. */}
-      <div className="container-page mt-10 grid items-start gap-6 2xl:grid-cols-[400px_minmax(0,1fr)]">
-          <div className="min-w-0 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
-            <h2 className="font-mono text-sm text-muted-foreground">{"// where the field work is"}</h2>
-            <FieldMap className="mt-5" />
+      <div className="container-page mt-10 grid items-start gap-6 2xl:grid-cols-[400px_minmax(0,1fr)] 2xl:items-stretch">
+          {/* Left column: the field sites, then the latest acceptance in
+              the space the taller AI bench leaves below the map. From 2xl
+              both columns end level; the pass takes up the difference. */}
+          <div className="flex min-w-0 flex-col gap-6">
+            <div className="min-w-0 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
+              <h2 className="font-mono text-sm text-muted-foreground">{"// where the field work is"}</h2>
+              <FieldMap className="mt-5" />
+            </div>
+            <ConferenceCard className="flex-1" />
           </div>
-          <div id="local-ai" className="min-w-0 scroll-mt-24 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
+          <div id="local-ai" className="flex min-w-0 scroll-mt-24 flex-col rounded-xl border border-border/60 bg-card/40 p-5 md:p-7">
             <h2 className="font-mono text-sm text-muted-foreground">{"// the local-AI bench"}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
               Two pipelines that run on one local GPU: a private assistant built from
@@ -51,6 +60,35 @@ export default function ResearchPage() {
             <div className="mt-5">
               <PipelineGraph variant="detailed" />
             </div>
+
+            {/* The real workspace behind the sketch. From 2xl it grows into
+                whatever height the left column leaves, so the two columns
+                end level without an empty band. */}
+            <a
+              href={asset("/ai/comfyui-workspace.webp")}
+              target="_blank"
+              rel="noreferrer"
+              className="group mt-6 flex min-h-56 flex-1 flex-col overflow-hidden rounded-xl border border-border/60 bg-card/60 transition-colors hover:border-primary/40 2xl:min-h-40"
+            >
+              <span className="terminal-titlebar">
+                <span className="terminal-dot bg-red-400/80" />
+                <span className="terminal-dot bg-amber-400/80" />
+                <span className="terminal-dot bg-emerald-400/80" />
+                <span className="ml-2 font-mono text-xs text-muted-foreground">ComfyUI, my workspace</span>
+                <span className="ml-auto font-mono text-[11px] text-muted-foreground group-hover:text-primary">
+                  open full size ↗
+                </span>
+              </span>
+              <span className="relative block flex-1">
+                <Image
+                  src={asset("/ai/comfyui-workspace.webp")}
+                  alt="A ComfyUI workspace with a video-generation workflow: loader, LoRA, sampling and decode groups wired together"
+                  fill
+                  sizes="(min-width: 1536px) 960px, 100vw"
+                  className="object-cover object-[50%_35%] transition-transform duration-700 group-hover:scale-[1.02]"
+                />
+              </span>
+            </a>
           </div>
       </div>
 
